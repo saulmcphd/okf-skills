@@ -1,0 +1,18 @@
+{
+  "name": "okf-skills",
+  "owner": {
+    "name": "Saul McLeod",
+    "url": "https://www.simplypsychology.org"
+  },
+  "metadata": {
+    "description": "Skills for building and using OKF (Open Knowledge Format) \"second brains\".",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "okf-skills",
+      "source": "./plugins/okf-skills",
+      "description": "Seven skills to scaffold, author, view/query, and grow an OKF knowledge bundle for any domain."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "okf-skills",
+  "version": "1.0.0",
+  "description": "Seven skills for building and using an OKF (Open Knowledge Format) \"second brain\" — scaffold a bundle; author concept, entity/reference/system, and playbook nodes; view and query it; and grow it safely from new sources.",
+  "author": {
+    "name": "Saul McLeod",
+    "url": "https://www.simplypsychology.org"
+  },
+  "homepage": "https://github.com/YOUR-GITHUB-USERNAME/okf-skills",
+  "repository": "https://github.com/YOUR-GITHUB-USERNAME/okf-skills",
+  "license": "MIT",
+  "keywords": [
+    "okf",
+    "open-knowledge-format",
+    "second-brain",
+    "knowledge-graph",
+    "markdown",
+    "agent-skills",
+    "knowledge-base"
+  ]
+}
