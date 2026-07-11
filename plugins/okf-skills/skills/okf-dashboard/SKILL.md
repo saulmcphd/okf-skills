@@ -73,8 +73,10 @@ portable as the bundle itself). Two steps:
 ### Features worth including (from plan §6A.1)
 - **Search** nodes by title/description.
 - **Filter** by `type`, `tag`, and centrality (hide the long tail; focus on hubs).
-- **Click a node → read it**: show its rendered content, its in/out links, its citations/references, its
-  `provenance`, and its verification status — so the graph is a reader, not just a picture.
+- **Click a node → read it**: **render the node's markdown to HTML** — headings, lists, fenced code, and
+  **tables as real HTML tables** (so a table transcribed from a source displays as a table, not raw
+  `| … |` text) — plus its in/out links, citations/references, `provenance`, and verification status, so
+  the graph is a reader, not just a picture. (Use a small inline markdown renderer; keep it self-contained.)
 - **Colour by type**, **size by centrality** (in-degree — how referenced a node is; see *Sizing* above);
   highlight a node's neighbourhood on hover.
 

@@ -83,7 +83,10 @@ timestamp: 2026-07-11           # ISO-8601 date or datetime
   the topic — *enrich or revise* it rather than adding a near-duplicate. When a new source **contradicts**
   an existing claim, surface the contradiction (state both, each dated and sourced) instead of silently
   overwriting; a brain that hides disagreement is worse than one that records it.
-- **Favor structure** — headings, lists, tables, fenced code — over freeform prose.
+- **Favor structure** — headings, lists, tables, fenced code — over freeform prose. **When the source
+  presents data as a table, reproduce it as a real markdown table** (`| col | col |` with a `|---|---|`
+  separator row) — not a prose summary, and never a pointer like "see Table 1". This keeps the node
+  self-contained *and* renders as a real table in the dashboard's node reader (see okf-dashboard).
 
 ### Conventional sections (`# Definition` first, `# Citations` last)
 
