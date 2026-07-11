@@ -88,6 +88,10 @@ For every approved item:
 - **Provenance ≠ citation.** Record the ingested source as provenance; cite the primary literature.
 - **No fabrication.** No invented facts, citations, or DOIs; if a section can't be sourced, leave it and
   flag it rather than filling it from outside knowledge.
+- **Strip source artifacts — the node must stand alone.** When lifting from the source, never carry over
+  its cross-references: no "Table 1", "Fig. 2", "see chapter 3", "the diagram above", "p. 42". The reader
+  won't have the source — **embed the content instead** (transcribe the table, describe the figure). See
+  the self-containment rule in **okf-concept-node**; a `check_source_refs`-style scan catches leftovers.
 
 ## Related skills
 - **okf-gap-scan** — tells you *which section of which node* a source should feed (drives step 1).

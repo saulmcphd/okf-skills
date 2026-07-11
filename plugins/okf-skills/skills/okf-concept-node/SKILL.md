@@ -65,9 +65,13 @@ timestamp: 2026-07-11           # ISO-8601 date or datetime
 
 ## Body — MAXIMUM detail, structural markdown
 
-- **Self-contained.** Embed *all* the relevant knowledge from the source: every definition, list item,
-  step, threshold, formula, worked example, and caveat. **Do NOT defer to the source** ("see chapter
-  X") — `resource` + `# Citations` handle provenance; the body must stand alone.
+- **Self-contained — no dangling source references.** Embed *all* the relevant knowledge from the
+  source: every definition, list item, step, threshold, formula, worked example, and caveat. The reader
+  does **not** have the source, so **never point at its artifacts**: no "**Table 1**", "**Fig. 2**", "the
+  diagram/table **above**", "see **chapter** 3", "**overleaf**", "on **p. 42**". Instead **bring the
+  content in** — transcribe a table as a markdown table, describe in prose what a figure shows, restate
+  the referenced point. (`resource` + the citations section handle *provenance*; the body must stand
+  *alone*.) A page number is legitimate only inside a citation for a direct quote — `(Author, Year, p. 42)`.
 - **Maximum, not minimum.** Length is not a cost — the index makes the file findable. When in doubt,
   include more. A reader should never need to open the source to understand the topic.
 - **Citation discipline.** Base every factual claim on the source; quote verbatim for lists / numbers /
