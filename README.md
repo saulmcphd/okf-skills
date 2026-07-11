@@ -29,6 +29,20 @@ implementations (see [Credits](#credits)).
 The skills cross-reference each other, so an agent chains them naturally (scaffold → author → use → grow
 → maintain).
 
+## Live dashboard demo
+
+The [`demo/`](demo/) folder has five **self-contained** HTML screens showing what the `okf-dashboard`
+skill produces (built over a small neutral sample brain — personal note-taking / PKM). Open any file in a
+browser: no build step, no server, no external requests.
+
+| Screen | File | Shows |
+| :-- | :-- | :-- |
+| Graph explorer | [`graph-explorer.html`](demo/graph-explorer.html) | Force-directed graph — search, filter by type/tag/centrality, click a node to open it. |
+| Node reader | [`node-reader.html`](demo/node-reader.html) | A node's body + metadata: links out/in, citations, provenance, verification. |
+| Ask the brain | [`ask-the-brain.html`](demo/ask-the-brain.html) | Grounded Q&A — every answer cites its source nodes and admits when the brain has no node. |
+| Review proposed changes | [`review-proposed-changes.html`](demo/review-proposed-changes.html) | The ingest loop: enrich / new-node / contradiction cards, approved one-by-one before anything is written. |
+| Gap dashboard | [`gap-dashboard.html`](demo/gap-dashboard.html) | The enrichment backlog: nodes ranked by missing/thin sections, plus missing-node candidates. |
+
 ## Install
 
 ### Claude ecosystem (Claude Code) — one-click, auto-triggering
@@ -73,6 +87,7 @@ okf-skills/
 │           ├── okf-dashboard/SKILL.md
 │           ├── okf-ingest-source/SKILL.md
 │           └── okf-gap-scan/SKILL.md
+├── demo/                          # five self-contained dashboard screens (open in a browser)
 ├── README.md
 └── LICENSE
 ```
