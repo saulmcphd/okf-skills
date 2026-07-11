@@ -136,10 +136,19 @@
     padding: 2px 0 2px 18px; margin: 0 0 18px; color: var(--ink-dim); font-style: italic;
   }
   .md hr { border: 0; height: 1px; background: var(--border); margin: 30px 0; }
-  .md table { border-collapse: collapse; margin: 4px 0 18px; font-size: 14px; display: block; overflow-x: auto; max-width: 100%; }
-  .md th, .md td { border: 1px solid var(--border); padding: 7px 11px; text-align: left; vertical-align: top; }
-  .md th { background: var(--panel-2); font-weight: 700; color: var(--ink-dim); white-space: nowrap; }
-  .md td { color: var(--ink); }
+  .md table {
+    display: block; overflow-x: auto; width: 100%;
+    border-collapse: collapse; margin: 0 0 20px; font-size: 14px;
+  }
+  .md th, .md td {
+    border: 1px solid var(--border); padding: 8px 12px;
+    text-align: left; vertical-align: top;
+  }
+  .md th {
+    background: var(--panel-2); font-weight: 700; color: var(--ink);
+    white-space: nowrap;
+  }
+  .md td { color: var(--ink-dim); }
   .md a.node-link {
     border-bottom: 1px solid rgba(37,99,201,.35);
   }
@@ -318,6 +327,14 @@ Evergreen notes work because they impose a small set of constraints that, follow
 A transient note has value once. An evergreen note is re-encountered, refined, and re-linked, so its value grows with the size of the surrounding graph. This is the same mechanism behind [Spaced Repetition](/concepts/spaced-repetition.md): repeated, effortful contact with an idea strengthens and extends it.
 
 In practice the returns show up slowly, then suddenly — the graph is mostly disconnected fragments until a critical mass of links makes previously distant ideas one hop apart.
+
+The contrast with ordinary notes is stark:
+
+| Property | Transient note | Evergreen note |
+|---|---|---|
+| Lifespan | used once | re-encountered and refined |
+| Organised by | source or date | concept |
+| Value over time | flat | compounds with the graph |
 
 ## Practice
 
@@ -640,17 +657,26 @@ function renderMarkdown(body) {
       continue;
     }
 
-    // table:  | h | h |  then  | --- | --- |  then body rows
+    // table: a | row immediately followed by a |---|---| separator row
     if (line.trim().startsWith("|") && i + 1 < lines.length &&
-        /^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i + 1]) && lines[i + 1].includes("-")) {
+        /^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$/.test(lines[i + 1]) && lines[i + 1].includes("-")) {
+      const splitRow = r => {
+        let s = r.trim();
+        if (s.startsWith("|")) s = s.slice(1);
+        if (s.endsWith("|")) s = s.slice(0, -1);
+        return s.split("|").map(c => c.trim());
+      };
+      const headers = splitRow(lines[i]); i += 2; // skip header + separator
       const rows = [];
-      while (i < lines.length && lines[i].trim().startsWith("|")) { rows.push(lines[i]); i++; }
-      const cells = r => r.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim());
-      const head = cells(rows[0]);
-      html += `<table><thead><tr>` + head.map(h => `<th>${renderInline(h)}</th>`).join("") +
+      while (i < lines.length && lines[i].trim().startsWith("|")) {
+        rows.push(splitRow(lines[i])); i++;
+      }
+      let t = `<table><thead><tr>` +
+        headers.map(h => `<th>${renderInline(h)}</th>`).join("") +
         `</tr></thead><tbody>` +
-        rows.slice(2).map(r => `<tr>` + cells(r).map(c => `<td>${renderInline(c)}</td>`).join("") + `</tr>`).join("") +
+        rows.map(r => `<tr>` + r.map(c => `<td>${renderInline(c)}</td>`).join("") + `</tr>`).join("") +
         `</tbody></table>`;
+      html += t;
       continue;
     }
 
