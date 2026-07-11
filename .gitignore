@@ -13,3 +13,6 @@ desktop.ini
 # Python
 __pycache__/
 *.pyc
+
+# Local skill-upload staging (canonical copies live in plugins/okf-skills/skills/)
+.skills/
