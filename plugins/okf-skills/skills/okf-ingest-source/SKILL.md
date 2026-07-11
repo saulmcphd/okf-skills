@@ -32,6 +32,11 @@ navigation) and produce a **per-item proposal**:
   which node is incomplete.
 - **New node(s)** — genuinely new topics / people / sources the brain lacks (a new concept, entity, or —
   for the source document itself — a `reference` node; see **okf-node-types**).
+- **Fill known gaps (check the backlog).** Cross-check the source against the standing **missing-node
+  backlog** from **okf-gap-scan** (its `candidate_nodes` — topics your nodes already name but have no node
+  of their own): for each candidate, ask whether *this* source carries enough to **create that node now**.
+  This closes the loop — gap-scan finds what's missing, ingestion fills it the moment a source provides the
+  material — so no upload is ever triaged in isolation from what you already know you're missing.
 - **Contradictions** — where the source disagrees with an existing claim, flag it (both statements,
   each dated and sourced) rather than silently overwriting.
 

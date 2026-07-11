@@ -94,6 +94,11 @@ The query pattern, and the integrity bar that makes it trustworthy.
 ### The hard integrity rule (non-negotiable — plan §6A.2)
 - **Ground every claim in the nodes.** The answer must **cite the nodes it drew on and their primary
   references**, with links back.
+- **Match the brain's citation style.** Format those citations the way the brain itself is written — for
+  an **academic brain** that means **APA 7th**: in-text `(Author, Year)` (a page number for a direct
+  quote) and a **References** list at the end of the answer. Draw the reference records from the
+  bibliography registry (**okf-bibliography**) and apply the format with the **apa-style** skill, so the
+  reader can lift the answer straight into their own writing.
 - **Never state anything the brain doesn't support.** No fabrication — the same integrity bar as the
   content itself.
 - **If the brain doesn't cover it, say so.** "The brain has no node on X" is a correct answer — and it
