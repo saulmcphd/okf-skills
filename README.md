@@ -34,7 +34,7 @@ The skills cross-reference each other, so an agent chains them naturally (scaffo
 ### Claude ecosystem (Claude Code) — one-click, auto-triggering
 
 ```
-/plugin marketplace add YOUR-GITHUB-USERNAME/okf-skills
+/plugin marketplace add saulmcphd/okf-skills
 /plugin install okf-skills@okf-skills
 ```
 
