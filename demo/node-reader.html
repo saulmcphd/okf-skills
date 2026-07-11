@@ -7,22 +7,23 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #14161c;
-    --panel: #191c24;
-    --panel-2: #1e222c;
-    --border: #23262f;
-    --border-soft: #2b2f3a;
-    --ink: #e7e9ef;
-    --ink-dim: #b9bdca;
-    --muted: #7c8296;
-    --muted-2: #5b6072;
-    --link: #6f9bff;
-    --link-hover: #9dbcff;
-    --concept: #6f9bff;
-    --entity: #e0a34d;
-    --playbook: #55c39a;
-    --reference: #d07fd0;
-    --system: #d9776c;
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --panel-2: #f0f2f5;
+    --border: #e3e5ea;
+    --border-soft: #d5d8e0;
+    --border-strong: #c2c6cf;
+    --ink: #1a1c22;
+    --ink-dim: #4a4e5a;
+    --muted: #6b7280;
+    --muted-2: #9aa0ac;
+    --link: #2563c9;
+    --link-hover: #1b4fb0;
+    --concept: #2563c9;
+    --entity: #9a6a00;
+    --playbook: #1c8452;
+    --reference: #7c3aad;
+    --system: #c0392b;
     --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
     --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
@@ -48,7 +49,7 @@
     display: flex; align-items: center; gap: 16px;
     padding: 13px 22px;
     border-bottom: 1px solid var(--border);
-    background: var(--bg);
+    background: var(--panel);
   }
   .back {
     display: inline-flex; align-items: center; gap: 8px;
@@ -61,7 +62,7 @@
     cursor: pointer;
     transition: border-color .15s, color .15s, background .15s;
   }
-  .back:hover { color: var(--ink); border-color: #3a4050; background: var(--panel-2); }
+  .back:hover { color: var(--ink); border-color: var(--border-strong); background: var(--panel-2); }
   .back svg { width: 15px; height: 15px; }
   .crumbs {
     font-family: var(--mono);
@@ -117,12 +118,12 @@
   .md ul, .md ol { margin: 0 0 16px; padding-left: 22px; }
   .md li { margin: 6px 0; }
   .md li::marker { color: var(--muted); }
-  .md strong { color: #fff; font-weight: 700; }
+  .md strong { color: #0e1014; font-weight: 700; }
   .md em { color: var(--ink-dim); }
   .md code {
     font-family: var(--mono); font-size: 13px;
     background: var(--panel-2); border: 1px solid var(--border);
-    padding: 1.5px 6px; border-radius: 5px; color: #d9deec;
+    padding: 1.5px 6px; border-radius: 5px; color: #2a2d35;
   }
   .md pre {
     background: var(--panel); border: 1px solid var(--border);
@@ -136,7 +137,7 @@
   }
   .md hr { border: 0; height: 1px; background: var(--border); margin: 30px 0; }
   .md a.node-link {
-    border-bottom: 1px solid rgba(111,155,255,.35);
+    border-bottom: 1px solid rgba(37,99,201,.35);
   }
   .md a.node-link:hover { border-bottom-color: var(--link-hover); }
   .md a.broken {
@@ -212,18 +213,35 @@
     font-size: 11px; font-weight: 700; font-family: var(--mono);
     padding: 3px 9px; border-radius: 999px; letter-spacing: .02em;
   }
-  .badge.verified { color: #7ee0b4; background: rgba(85,195,154,.12); border: 1px solid rgba(85,195,154,.35); }
-  .badge.unverified { color: #e6b46a; background: rgba(224,163,77,.12); border: 1px solid rgba(224,163,77,.35); }
+  .badge.verified { color: #1c8452; background: rgba(28,132,82,.10); border: 1px solid rgba(28,132,82,.32); }
+  .badge.unverified { color: #9a6a00; background: rgba(154,106,0,.10); border: 1px solid rgba(154,106,0,.32); }
   .badge .bdot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
   .side-divider { height: 1px; background: var(--border); margin: 26px 0; }
+
+  /* Local graph — dark inset (a graph reads best on dark) */
+  .localgraph { background: #14161c; border: 1px solid #23262f; border-radius: 10px; padding: 8px 6px 4px; }
+  .localgraph svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .lg-edge { stroke: #3a3e4a; stroke-width: 1.2; }
+  .lg-arrow { transition: opacity .12s; }
+  .lg-node { cursor: pointer; }
+  .lg-node circle { transition: stroke .12s, stroke-width .12s; }
+  .lg-node text { font-family: var(--mono); font-size: 9.5px; fill: #b9bdca; }
+  .lg-node:hover text { fill: #9dbcff; }
+  .lg-node:hover circle { stroke: #fff; stroke-width: 1.6; }
+  .lg-center circle.ring { fill: none; stroke: #2b2f3a; }
+  .lg-cap { font-family: var(--mono); font-size: 11px; color: #7c8296; margin-top: 7px; text-align: center; }
+  .lg-cap .more { color: #5b6072; }
+  .lg-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: center; margin-top: 8px; }
+  .lg-legend .lgi { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 9.5px; color: #7c8296; }
+  .lg-legend .lgi .d { width: 7px; height: 7px; border-radius: 50%; }
 
   /* Toast for missing nodes */
   .toast {
     position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px);
     background: var(--panel-2); border: 1px solid var(--border-soft);
     color: var(--ink-dim); font-size: 13px; padding: 10px 16px; border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0,0,0,.45); opacity: 0; pointer-events: none;
+    box-shadow: 0 8px 30px rgba(15,20,30,.15); opacity: 0; pointer-events: none;
     transition: opacity .2s, transform .2s; z-index: 50; font-family: var(--mono);
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -268,15 +286,15 @@ const NODES = {
   "/concepts/evergreen-notes.md": {
     type: "concept",
     title: "Evergreen Notes",
-    description: "Notes written to be developed, revised, and reused over time \u2014 the atomic unit of a compounding personal knowledge system.",
+    description: "Notes written to be developed, revised, and reused over time — the atomic unit of a compounding personal knowledge system.",
     tags: ["knowledge-management", "writing", "note-taking", "compounding"],
     timestamp: "2026-05-14T09:22:00Z",
     references: [
-      { title: "How to Take Smart Notes", author: "S\u00f6nke Ahrens", year: 2017, node: "/references/how-to-take-smart-notes.md" },
+      { title: "How to Take Smart Notes", author: "Sönke Ahrens", year: 2017, node: "/references/how-to-take-smart-notes.md" },
       { title: "Evergreen notes should be atomic", author: "Andy Matuschak", year: 2020, url: "notes.andymatuschak.org" }
     ],
     provenance: { ai_model: "claude-opus-4", human_verified: true, drafted: "2026-05-14", edited_by: "you" },
-    body: `Evergreen notes are notes written and organized to **evolve, contribute, and accumulate** over time, across projects. This is opposed to the usual pattern of note-taking that is transient \u2014 optimized for a single moment of capture and rarely revisited.
+    body: `Evergreen notes are notes written and organized to **evolve, contribute, and accumulate** over time, across projects. This is opposed to the usual pattern of note-taking that is transient — optimized for a single moment of capture and rarely revisited.
 
 The practice originates in the work of [Andy Matuschak](/entities/andy-matuschak.md), who argued that most note-taking fails because notes are treated as disposable records rather than as durable *units of thought*.
 
@@ -286,16 +304,16 @@ The practice originates in the work of [Andy Matuschak](/entities/andy-matuschak
 
 Evergreen notes work because they impose a small set of constraints that, followed consistently, compound:
 
-- **Atomic** \u2014 each note captures exactly one idea, so it can be linked and reused independently. See [Atomic Notes](/concepts/atomic-notes.md).
-- **Concept-oriented** \u2014 notes are organized by idea, not by source or date, which lets ideas from different sources collide productively.
-- **Densely linked** \u2014 a note earns its keep by connecting to others; the links *are* the knowledge graph.
-- **Written for your future self** \u2014 phrased as durable claims, not context-dependent scraps.
+- **Atomic** — each note captures exactly one idea, so it can be linked and reused independently. See [Atomic Notes](/concepts/atomic-notes.md).
+- **Concept-oriented** — notes are organized by idea, not by source or date, which lets ideas from different sources collide productively.
+- **Densely linked** — a note earns its keep by connecting to others; the links *are* the knowledge graph.
+- **Written for your future self** — phrased as durable claims, not context-dependent scraps.
 
 ## Why it compounds
 
 A transient note has value once. An evergreen note is re-encountered, refined, and re-linked, so its value grows with the size of the surrounding graph. This is the same mechanism behind [Spaced Repetition](/concepts/spaced-repetition.md): repeated, effortful contact with an idea strengthens and extends it.
 
-In practice the returns show up slowly, then suddenly \u2014 the graph is mostly disconnected fragments until a critical mass of links makes previously distant ideas one hop apart.
+In practice the returns show up slowly, then suddenly — the graph is mostly disconnected fragments until a critical mass of links makes previously distant ideas one hop apart.
 
 ## Practice
 
@@ -303,10 +321,10 @@ Turning capture into evergreen notes is a daily habit, not a one-time migration.
 
 # Related
 
-- [Atomic Notes](/concepts/atomic-notes.md) \u2014 the granularity constraint that makes evergreen notes linkable.
-- [Spaced Repetition](/concepts/spaced-repetition.md) \u2014 the retrieval counterpart to durable writing.
-- [Zettelkasten](/systems/zettelkasten.md) \u2014 the slip-box system these notes live inside.
-- [Daily Note Review](/playbooks/daily-note-review.md) \u2014 the routine that keeps notes evergreen.
+- [Atomic Notes](/concepts/atomic-notes.md) — the granularity constraint that makes evergreen notes linkable.
+- [Spaced Repetition](/concepts/spaced-repetition.md) — the retrieval counterpart to durable writing.
+- [Zettelkasten](/systems/zettelkasten.md) — the slip-box system these notes live inside.
+- [Daily Note Review](/playbooks/daily-note-review.md) — the routine that keeps notes evergreen.
 
 # References
 
@@ -385,7 +403,7 @@ It pairs naturally with [Evergreen Notes](/concepts/evergreen-notes.md): writing
   "/references/how-to-take-smart-notes.md": {
     type: "reference",
     title: "How to Take Smart Notes",
-    description: "S\u00f6nke Ahrens' 2017 book presenting the Zettelkasten method to a general audience.",
+    description: "Sönke Ahrens' 2017 book presenting the Zettelkasten method to a general audience.",
     tags: ["book", "source", "note-taking"],
     timestamp: "2026-01-05T09:00:00Z",
     references: [],
@@ -419,7 +437,7 @@ function relTime(iso) {
 function fmtDate(iso) {
   const d = new Date(iso);
   return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) +
-    " \u00b7 " + d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false });
+    " · " + d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false });
 }
 function typeDot(type) {
   return `<span class="dot" style="background:${TYPE_META[type].color}"></span>`;
@@ -441,6 +459,85 @@ function backlinksFor(path) {
     if (extractLinks(node.body).some(l => l.path === path)) out.push({ path: p, node });
   }
   return out;
+}
+
+/* ---------- local graph (1-hop neighbourhood) ---------- */
+function neighborsOf(path) {
+  const c = NODES[path];
+  const map = new Map();
+  extractLinks(c.body).forEach(l => { if (NODES[l.path]) map.set(l.path, { path: l.path, out: true, in: false }); });
+  backlinksFor(path).forEach(b => {
+    if (map.has(b.path)) map.get(b.path).in = true;
+    else map.set(b.path, { path: b.path, out: false, in: true });
+  });
+  return [...map.values()];
+}
+
+function localGraphBlock(path) {
+  const center = NODES[path];
+  let nbs = neighborsOf(path);
+  const CAP = 9;
+  let extra = 0;
+  if (nbs.length > CAP) { extra = nbs.length - CAP; nbs = nbs.slice(0, CAP); }
+
+  const W = 272, H = 232, cx = W / 2, cy = H / 2, R = 76, cr = 13, nr = 9;
+
+  if (!nbs.length) {
+    return `<div class="localgraph"><div class="lg-cap">No linked nodes yet — this node is an orphan.</div></div>`;
+  }
+
+  function trunc(s, n) { return s.length > n ? s.slice(0, n - 1) + "…" : s; }
+  // bright palette so the mini-graph pops on its dark inset
+  const G = { concept: "#6f9bff", entity: "#e0a34d", playbook: "#55c39a", reference: "#d07fd0", system: "#d9776c" };  function arrow(x, y, ux, uy, color) {
+    const s = 5, w = 3.2, bx = x - ux * s, by = y - uy * s, px = -uy, py = ux;
+    return `<polygon class="lg-arrow" points="${x.toFixed(1)},${y.toFixed(1)} ${(bx + px * w).toFixed(1)},${(by + py * w).toFixed(1)} ${(bx - px * w).toFixed(1)},${(by - py * w).toFixed(1)}" fill="${color}"></polygon>`;
+  }
+
+  let edges = "", nodes = "";
+  nbs.forEach((nb, i) => {
+    const n = NODES[nb.path];
+    const col = G[n.type];
+    const a = -Math.PI / 2 + (i / nbs.length) * Math.PI * 2;
+    const ux = Math.cos(a), uy = Math.sin(a);
+    const nx = cx + R * ux, ny = cy + R * uy;
+    const sx = cx + ux * cr, sy = cy + uy * cr;
+    const ex = nx - ux * nr, ey = ny - uy * nr;
+    edges += `<line class="lg-edge" x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}"></line>`;
+    if (nb.out) edges += arrow(ex, ey, ux, uy, "#7f8598");
+    if (nb.in) edges += arrow(sx, sy, -ux, -uy, "#7f8598");
+    const anchor = ux > 0.25 ? "start" : ux < -0.25 ? "end" : "middle";
+    const lx = nx + ux * (nr + 6);
+    const ly = ny + uy * (nr + 6) + (Math.abs(uy) < 0.25 ? 3 : uy > 0 ? 9 : -3);
+    nodes += `<g class="lg-node" data-path="${esc(nb.path)}">
+      <circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="${nr}" fill="${col}"></circle>
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anchor}">${esc(trunc(n.title, 14))}</text>
+    </g>`;
+  });
+
+  const centerCol = G[center.type];
+  const centerG = `<g class="lg-center">
+    <circle class="ring" cx="${cx}" cy="${cy}" r="${cr + 4}" stroke-width="1.3"></circle>
+    <circle cx="${cx}" cy="${cy}" r="${cr}" fill="${centerCol}" stroke="#14161c" stroke-width="2"></circle>
+  </g>`;
+
+  // legend: only the types actually present
+  const presentTypes = [...new Set([center.type, ...nbs.map(nb => NODES[nb.path].type)])];
+  const legend = presentTypes.map(t =>
+    `<span class="lgi"><span class="d" style="background:${G[t]}"></span>${TYPE_META[t].label}</span>`
+  ).join("");
+
+  const cap = `${nbs.length} direct connection${nbs.length === 1 ? "" : "s"}` +
+    (extra ? ` <span class="more">(+${extra} more)</span>` : "");
+
+  return `<div class="localgraph">
+    <svg viewBox="-36 -6 344 244" role="img" aria-label="Local graph of directly connected nodes">
+      ${edges}
+      ${centerG}
+      ${nodes}
+    </svg>
+    <div class="lg-legend">${legend}</div>
+    <div class="lg-cap">${cap}</div>
+  </div>`;
 }
 
 /* ---------- minimal markdown renderer ---------- */
@@ -566,7 +663,7 @@ function render(path) {
   const outgoing = extractLinks(node.body);
   const incoming = backlinksFor(path);
   document.getElementById("headerRight").textContent =
-    `${outgoing.length} out \u00b7 ${incoming.length} in`;
+    `${outgoing.length} out · ${incoming.length} in`;
 
   // reader
   document.getElementById("reader").innerHTML = `
@@ -601,7 +698,7 @@ function render(path) {
 
   const refs = node.references && node.references.length
     ? node.references.map((r, idx) => {
-        const inner = `<span class="rtitle">${esc(r.title)}</span> <span class="rmeta">\u2014 ${esc(r.author)}, ${r.year}</span>`;
+        const inner = `<span class="rtitle">${esc(r.title)}</span> <span class="rmeta">— ${esc(r.author)}, ${r.year}</span>`;
         const linked = r.node && NODES[r.node]
           ? `<a href="#" data-path="${esc(r.node)}">${inner}</a>`
           : inner;
@@ -613,6 +710,11 @@ function render(path) {
     <div class="meta-block">
       <div class="meta-label">Type</div>
       <div class="meta-type">${typeDot(node.type)}${tm.label}</div>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">Local graph <span class="count">${neighborsOf(path).length}</span></div>
+      ${localGraphBlock(path)}
     </div>
 
     <div class="meta-block">
@@ -651,7 +753,7 @@ function render(path) {
       <div class="prov">
         <div class="prov-row"><span class="prov-k">ai_model</span><span class="prov-v">${esc(node.provenance.ai_model)}</span></div>
         <div class="prov-row"><span class="prov-k">drafted</span><span class="prov-v">${esc(node.provenance.drafted)}</span></div>
-        <div class="prov-row"><span class="prov-k">edited_by</span><span class="prov-v">${node.provenance.edited_by ? esc(node.provenance.edited_by) : "\u2014"}</span></div>
+        <div class="prov-row"><span class="prov-k">edited_by</span><span class="prov-v">${node.provenance.edited_by ? esc(node.provenance.edited_by) : "—"}</span></div>
         <div class="prov-row"><span class="prov-k">human_verified</span>${badge}</div>
       </div>
     </div>`;
@@ -689,7 +791,7 @@ document.addEventListener("click", (e) => {
 });
 
 document.getElementById("backBtn").addEventListener("click", () =>
-  showToast("\u2190 In the full app this returns to the graph view"));
+  showToast("← In the full app this returns to the graph view"));
 document.getElementById("backBtn").addEventListener("keydown", (e) => {
   if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.target.click(); }
 });

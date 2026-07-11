@@ -7,22 +7,23 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #14161c;
-    --panel: #191c24;
-    --panel-2: #1e222c;
-    --border: #23262f;
-    --border-soft: #2b2f3a;
-    --ink: #e7e9ef;
-    --ink-dim: #b9bdca;
-    --muted: #7c8296;
-    --muted-2: #5b6072;
-    --link: #6f9bff;
-    --link-hover: #9dbcff;
-    --concept: #6f9bff;
-    --entity: #e0a34d;
-    --playbook: #55c39a;
-    --reference: #d07fd0;
-    --system: #d9776c;
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --panel-2: #f0f2f5;
+    --border: #e3e5ea;
+    --border-soft: #d5d8e0;
+    --border-strong: #c2c6cf;
+    --ink: #1a1c22;
+    --ink-dim: #4a4e5a;
+    --muted: #6b7280;
+    --muted-2: #9aa0ac;
+    --link: #2563c9;
+    --link-hover: #1b4fb0;
+    --concept: #2563c9;
+    --entity: #9a6a00;
+    --playbook: #1c8452;
+    --reference: #7c3aad;
+    --system: #c0392b;
     --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
     --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
@@ -37,7 +38,7 @@
   a { color: var(--link); text-decoration: none; }
   a:hover { color: var(--link-hover); }
   ::-webkit-scrollbar { width: 9px; height: 9px; }
-  ::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
 
   .shell { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
@@ -48,7 +49,7 @@
     display: flex; align-items: center; gap: 16px;
     padding: 13px 22px;
     border-bottom: 1px solid var(--border);
-    background: var(--bg);
+    background: var(--panel);
   }
   .back {
     display: inline-flex; align-items: center; gap: 8px;
@@ -61,7 +62,7 @@
     cursor: pointer;
     transition: border-color .15s, color .15s, background .15s;
   }
-  .back:hover { color: var(--ink); border-color: #3a4050; background: var(--panel-2); }
+  .back:hover { color: var(--ink); border-color: var(--border-strong); background: var(--panel-2); }
   .back svg { width: 15px; height: 15px; }
   .crumbs {
     font-family: var(--mono);
@@ -75,37 +76,104 @@
     margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted);
     display: flex; align-items: center; gap: 8px;
   }
-  .header-right .live { width: 7px; height: 7px; border-radius: 50%; background: var(--playbook); box-shadow: 0 0 0 3px rgba(85,195,154,.15); }
+  .header-right .live { width: 7px; height: 7px; border-radius: 50%; background: var(--playbook); box-shadow: 0 0 0 3px rgba(28,132,82,.15); }
 
-  /* Conversation */
-  .conv-wrap { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
-  .conv {
-    max-width: 780px; margin: 0 auto;
-    padding: 34px clamp(20px, 5vw, 40px) 40px;
-    display: flex; flex-direction: column; gap: 30px;
+  /* Ask zone (top, fixed under header) */
+  .ask-zone {
+    flex: 0 0 auto;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    padding: 30px clamp(20px, 5vw, 40px) 22px;
   }
+  .ask-inner { max-width: 780px; margin: 0 auto; }
 
-  /* Intro (empty-ish state header) */
-  .intro { margin-bottom: 2px; }
+  .intro { margin-bottom: 18px; }
   .intro h1 {
-    font-size: 27px; font-weight: 700; letter-spacing: -0.02em;
-    display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+    font-size: 24px; font-weight: 700; letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 7px;
   }
   .intro .brainmark {
     width: 30px; height: 30px; border-radius: 9px;
-    background: linear-gradient(135deg, rgba(111,155,255,.9), rgba(85,195,154,.85));
+    background: linear-gradient(135deg, var(--concept), var(--playbook));
     display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
   }
-  .intro .brainmark svg { width: 17px; height: 17px; color: #14161c; }
-  .intro p { color: var(--ink-dim); font-size: 15px; max-width: 60ch; text-wrap: pretty; }
+  .intro .brainmark svg { width: 17px; height: 17px; color: #fff; }
+  .intro p { color: var(--ink-dim); font-size: 14.5px; max-width: 62ch; text-wrap: pretty; }
   .intro p code {
     font-family: var(--mono); font-size: 12.5px; background: var(--panel-2);
-    border: 1px solid var(--border); padding: 1px 6px; border-radius: 5px; color: #d9deec;
+    border: 1px solid var(--border); padding: 1px 6px; border-radius: 5px; color: #2a2d35;
   }
 
-  /* Message rows */
-  .msg { display: flex; flex-direction: column; gap: 9px; animation: fadeUp .3s ease; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  /* Prominent search bar */
+  .searchbar {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--panel); border: 1.5px solid var(--border-soft);
+    border-radius: 14px; padding: 6px 8px 6px 16px;
+    box-shadow: 0 1px 2px rgba(15,20,30,.04);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .searchbar:focus-within { border-color: var(--link); box-shadow: 0 0 0 3px rgba(37,99,201,.12); }
+  .searchbar .glass { width: 20px; height: 20px; color: var(--muted); flex: 0 0 auto; }
+  .searchbar textarea {
+    flex: 1 1 auto; resize: none; border: 0; outline: 0; background: transparent;
+    color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.5;
+    padding: 11px 0; max-height: 160px;
+  }
+  .searchbar textarea::placeholder { color: var(--muted-2); }
+  .send {
+    flex: 0 0 auto; width: 42px; height: 42px; border-radius: 11px; border: 0;
+    background: var(--link); color: #fff; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .14s, opacity .14s;
+  }
+  .send:hover { background: var(--link-hover); }
+  .send:disabled { opacity: .4; cursor: not-allowed; }
+  .send svg { width: 19px; height: 19px; }
+
+  .composer-hint {
+    margin: 11px 2px 0;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .composer-hint svg { width: 12px; height: 12px; color: var(--playbook); }
+
+  /* Suggested questions — directly under the ask bar */
+  .suggest-block { margin-top: 18px; }
+  .suggest-label {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .suggest-row { display: flex; flex-wrap: wrap; gap: 9px; }
+  .suggest {
+    display: inline-flex; align-items: center; gap: 9px;
+    text-align: left;
+    padding: 9px 14px; border-radius: 999px;
+    border: 1px solid var(--border-soft); background: var(--panel);
+    color: var(--ink-dim); font-family: var(--sans); font-size: 13.5px; cursor: pointer;
+    transition: border-color .14s, background .14s, color .14s;
+  }
+  .suggest:hover { border-color: var(--border-strong); background: var(--panel-2); color: var(--ink); }
+  .suggest svg { width: 15px; height: 15px; color: var(--muted); flex: 0 0 auto; }
+  .suggest:hover svg { color: var(--link); }
+
+  /* Answers list (below, newest first) */
+  .answers-wrap { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+  .answers {
+    max-width: 780px; margin: 0 auto;
+    padding: 26px clamp(20px, 5vw, 40px) 48px;
+    display: flex; flex-direction: column; gap: 26px;
+  }
+
+  .exchange {
+    display: flex; flex-direction: column; gap: 16px;
+    padding-bottom: 26px; border-bottom: 1px solid var(--border);
+    animation: fadeUp .3s ease;
+  }
+  .exchange:last-child { border-bottom: 0; padding-bottom: 0; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+  .msg { display: flex; flex-direction: column; gap: 9px; }
 
   .role {
     font-family: var(--mono); font-size: 10.5px; font-weight: 600;
@@ -119,17 +187,17 @@
   .bubble-you {
     align-self: flex-start; max-width: 100%;
     background: var(--panel-2); border: 1px solid var(--border-soft);
-    border-radius: 12px; padding: 13px 17px;
+    border-radius: 12px; padding: 12px 17px;
     font-size: 16px; color: var(--ink); text-wrap: pretty;
   }
 
   .answer { font-size: 16px; color: var(--ink); }
   .answer p { margin: 0 0 14px; text-wrap: pretty; }
   .answer p:last-child { margin-bottom: 0; }
-  .answer strong { color: #fff; font-weight: 700; }
+  .answer strong { color: #0e1014; font-weight: 700; }
   .answer em { color: var(--ink-dim); }
   .answer a.inline-cite {
-    color: var(--link); border-bottom: 1px solid rgba(111,155,255,.35);
+    color: var(--link); border-bottom: 1px solid rgba(37,99,201,.35);
     font-family: var(--mono); font-size: 13px;
   }
   .answer a.inline-cite:hover { border-bottom-color: var(--link-hover); }
@@ -137,7 +205,7 @@
   /* No-node answer */
   .no-node {
     display: flex; align-items: flex-start; gap: 12px;
-    background: rgba(217,119,108,.07); border: 1px solid rgba(217,119,108,.3);
+    background: rgba(192,57,43,.06); border: 1px solid rgba(192,57,43,.28);
     border-radius: 12px; padding: 15px 17px;
     color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty;
   }
@@ -146,14 +214,14 @@
   .no-node .hint { display: block; margin-top: 6px; font-size: 13px; color: var(--muted); }
 
   /* Citation chips */
-  .cites { margin-top: 4px; }
+  .cites { margin-top: 2px; }
   .cites-label {
     font-family: var(--mono); font-size: 10.5px; font-weight: 600;
     letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
     margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
   }
   .cites-label .count {
-    font-weight: 600; color: var(--muted-2);
+    font-weight: 600; color: var(--muted);
     background: var(--panel-2); border: 1px solid var(--border);
     border-radius: 999px; padding: 1px 7px; font-size: 10px;
   }
@@ -166,7 +234,7 @@
     background: var(--panel); cursor: pointer;
     transition: border-color .14s, background .14s, transform .14s;
   }
-  .chip:hover { border-color: #3a4050; background: var(--panel-2); transform: translateY(-1px); }
+  .chip:hover { border-color: var(--border-strong); background: var(--panel-2); transform: translateY(-1px); }
   .chip .tdot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
   .chip .ctext { min-width: 0; display: flex; flex-direction: column; line-height: 1.3; }
   .chip .ctitle { font-size: 13.5px; font-weight: 600; color: var(--ink-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -178,26 +246,6 @@
     border-radius: 5px; padding: 1px 5px; flex: 0 0 auto; margin-left: 2px;
   }
 
-  /* Suggested questions */
-  .suggest-block { margin-top: 4px; }
-  .suggest-label {
-    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
-    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
-    margin-bottom: 11px;
-  }
-  .suggest-row { display: flex; flex-direction: column; gap: 9px; }
-  .suggest {
-    display: flex; align-items: center; gap: 11px;
-    text-align: left; width: 100%;
-    padding: 12px 15px; border-radius: 11px;
-    border: 1px solid var(--border-soft); background: var(--panel);
-    color: var(--ink-dim); font-family: var(--sans); font-size: 14.5px; cursor: pointer;
-    transition: border-color .14s, background .14s, color .14s;
-  }
-  .suggest:hover { border-color: #3a4050; background: var(--panel-2); color: var(--ink); }
-  .suggest svg { width: 15px; height: 15px; color: var(--muted); flex: 0 0 auto; }
-  .suggest:hover svg { color: var(--link); }
-
   /* Thinking indicator */
   .thinking { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; font-family: var(--mono); }
   .thinking .dots { display: inline-flex; gap: 4px; }
@@ -206,47 +254,12 @@
   .thinking .dots i:nth-child(3) { animation-delay: .36s; }
   @keyframes blink { 0%, 60%, 100% { opacity: .25; } 30% { opacity: 1; } }
 
-  /* Composer */
-  .composer-wrap {
-    flex: 0 0 auto; border-top: 1px solid var(--border);
-    background: var(--bg); padding: 16px clamp(20px, 5vw, 40px) 20px;
-  }
-  .composer {
-    max-width: 780px; margin: 0 auto;
-    display: flex; align-items: flex-end; gap: 10px;
-    background: var(--panel); border: 1px solid var(--border-soft);
-    border-radius: 14px; padding: 8px 8px 8px 16px;
-    transition: border-color .15s;
-  }
-  .composer:focus-within { border-color: #3a4050; }
-  .composer textarea {
-    flex: 1 1 auto; resize: none; border: 0; outline: 0; background: transparent;
-    color: var(--ink); font-family: var(--sans); font-size: 15.5px; line-height: 1.5;
-    padding: 8px 0; max-height: 160px;
-  }
-  .composer textarea::placeholder { color: var(--muted-2); }
-  .send {
-    flex: 0 0 auto; width: 40px; height: 40px; border-radius: 10px; border: 0;
-    background: var(--link); color: #0e1220; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: background .14s, opacity .14s;
-  }
-  .send:hover { background: var(--link-hover); }
-  .send:disabled { opacity: .4; cursor: not-allowed; }
-  .send svg { width: 18px; height: 18px; }
-  .composer-hint {
-    max-width: 780px; margin: 9px auto 0;
-    font-family: var(--mono); font-size: 11px; color: var(--muted-2);
-    display: flex; align-items: center; gap: 6px;
-  }
-  .composer-hint svg { width: 12px; height: 12px; }
-
   /* Toast */
   .toast {
-    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--panel-2); border: 1px solid var(--border-soft);
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--panel); border: 1px solid var(--border-soft);
     color: var(--ink-dim); font-size: 13px; padding: 10px 16px; border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0,0,0,.45); opacity: 0; pointer-events: none;
+    box-shadow: 0 8px 30px rgba(15,20,30,.15); opacity: 0; pointer-events: none;
     transition: opacity .2s, transform .2s; z-index: 50; font-family: var(--mono);
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -254,7 +267,7 @@
 
   @media (max-width: 640px) {
     .header-right { display: none; }
-    .intro h1 { font-size: 23px; }
+    .intro h1 { font-size: 21px; }
     .chip { max-width: 100%; }
   }
 </style>
@@ -272,21 +285,36 @@
     <div class="header-right"><span class="live"></span>7 nodes indexed</div>
   </header>
 
-  <div class="conv-wrap" id="convWrap">
-    <div class="conv" id="conv"></div>
+  <!-- Ask zone: composer as a prominent search bar, at the top -->
+  <div class="ask-zone">
+    <div class="ask-inner">
+      <div class="intro">
+        <h1><span class="brainmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4 3 3 0 0 0-2 5 3 3 0 0 0 2 5 4 4 0 0 0 8 0 3 3 0 0 0 2-5 3 3 0 0 0-2-5 4 4 0 0 0-4-4z"></path></svg></span>Ask the brain</h1>
+        <p>Ask a question in natural language. The answer is synthesised <em>only</em> from your indexed nodes, and every claim links back to the exact <code>.md</code> nodes it drew from.</p>
+      </div>
+
+      <form class="searchbar" id="composer">
+        <svg class="glass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+        <textarea id="input" rows="1" placeholder="Ask your second brain a question…" autocomplete="off"></textarea>
+        <button class="send" id="send" type="submit" aria-label="Ask">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+        </button>
+      </form>
+      <div class="composer-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        Answers are grounded only in your nodes · every claim shows its sources
+      </div>
+
+      <div class="suggest-block">
+        <div class="suggest-label">Try asking</div>
+        <div class="suggest-row" id="suggestRow"></div>
+      </div>
+    </div>
   </div>
 
-  <div class="composer-wrap">
-    <form class="composer" id="composer">
-      <textarea id="input" rows="1" placeholder="Ask your second brain a question…" autocomplete="off"></textarea>
-      <button class="send" id="send" type="submit" aria-label="Ask">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
-      </button>
-    </form>
-    <div class="composer-hint">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-      Answers are grounded only in your nodes · every claim shows its sources
-    </div>
+  <!-- Answers, newest first -->
+  <div class="answers-wrap" id="answersWrap">
+    <div class="answers" id="answers"></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -298,7 +326,7 @@
 const NODES = {
   "/concepts/evergreen-notes.md": {
     type: "concept", title: "Evergreen Notes",
-    description: "Notes written to be developed, revised, and reused over time \u2014 the atomic unit of a compounding personal knowledge system.",
+    description: "Notes written to be developed, revised, and reused over time — the atomic unit of a compounding personal knowledge system.",
     tags: ["knowledge-management", "writing", "note-taking", "compounding"]
   },
   "/concepts/atomic-notes.md": {
@@ -328,7 +356,7 @@ const NODES = {
   },
   "/references/how-to-take-smart-notes.md": {
     type: "reference", title: "How to Take Smart Notes",
-    description: "S\u00f6nke Ahrens' 2017 book presenting the Zettelkasten method to a general audience.",
+    description: "Sönke Ahrens' 2017 book presenting the Zettelkasten method to a general audience.",
     tags: ["book", "source", "note-taking"]
   }
 };
@@ -354,7 +382,7 @@ const ANSWERS = [
     answer:
 `**Evergreen notes** are notes written to evolve, contribute, and accumulate across projects, rather than being captured once and forgotten [Evergreen Notes](/concepts/evergreen-notes.md). Your brain frames them as the atomic unit of a *compounding* knowledge system.
 
-They work because of a few reinforcing constraints. Each note stays **atomic** \u2014 one idea only \u2014 so it can be linked and reused from many contexts without dragging baggage along [Atomic Notes](/concepts/atomic-notes.md). Notes then live inside a slip-box, densely cross-linked, which is the [Zettelkasten](/systems/zettelkasten.md) system your other notes reference.
+They work because of a few reinforcing constraints. Each note stays **atomic** — one idea only — so it can be linked and reused from many contexts without dragging baggage along [Atomic Notes](/concepts/atomic-notes.md). Notes then live inside a slip-box, densely cross-linked, which is the [Zettelkasten](/systems/zettelkasten.md) system your other notes reference.
 
 The practice traces to [Andy Matuschak](/entities/andy-matuschak.md), who argued that most note-taking fails because notes are treated as disposable records rather than durable units of thought. The payoff *compounds*: a transient note has value once, but an evergreen note is re-encountered, refined, and re-linked, so its value grows with the graph around it.`
   },
@@ -362,7 +390,7 @@ The practice traces to [Andy Matuschak](/entities/andy-matuschak.md), who argued
     keys: ["daily", "routine", "keep notes alive", "workflow", "habit", "review", "how do i process", "inbox"],
     sources: ["/playbooks/daily-note-review.md", "/concepts/evergreen-notes.md", "/systems/zettelkasten.md"],
     answer:
-`Your brain has a concrete routine for this: the **Daily Note Review** \u2014 a ~15-minute loop for turning captured fragments into linked evergreen notes [Daily Note Review](/playbooks/daily-note-review.md).
+`Your brain has a concrete routine for this: the **Daily Note Review** — a ~15-minute loop for turning captured fragments into linked evergreen notes [Daily Note Review](/playbooks/daily-note-review.md).
 
 The loop is: process the day's inbox captures, promote anything worth keeping into an *atomic, evergreen* note, and add at least one outgoing link per new note. That last step is what keeps the graph alive rather than accumulating orphans.
 
@@ -372,7 +400,7 @@ It feeds directly into your [Evergreen Notes](/concepts/evergreen-notes.md) prac
     keys: ["spaced", "memory", "remember", "forget", "retention", "learning", "recall"],
     sources: ["/concepts/spaced-repetition.md", "/concepts/evergreen-notes.md"],
     answer:
-`For retention, your brain points to **Spaced Repetition** \u2014 scheduling reviews of a piece of information at expanding intervals, timed to just before you'd forget it, to exploit the *spacing effect* [Spaced Repetition](/concepts/spaced-repetition.md).
+`For retention, your brain points to **Spaced Repetition** — scheduling reviews of a piece of information at expanding intervals, timed to just before you'd forget it, to exploit the *spacing effect* [Spaced Repetition](/concepts/spaced-repetition.md).
 
 It pairs naturally with writing: [Evergreen Notes](/concepts/evergreen-notes.md) produce durable, well-phrased claims, and spaced retrieval is the counterpart that keeps those claims accessible over time.
 
@@ -380,10 +408,9 @@ It pairs naturally with writing: [Evergreen Notes](/concepts/evergreen-notes.md)
   }
 ];
 
-/* Pre-seeded conversation so the screen opens mid-thread with a full Q&A. */
+/* Pre-seeded conversation so the screen opens with a full example Q&A. */
 const SEED = [
-  { role: "you", text: "What are evergreen notes and why does my system say they compound?" },
-  { role: "brain", answerIndex: 0 }
+  { query: "What are evergreen notes and why does my system say they compound?", answerIndex: 0 }
 ];
 
 const SUGGESTED = [
@@ -403,7 +430,7 @@ function renderAnswer(md) {
   return md.split(/\n{2,}/).map(para => {
     const parts = [];
     const linkRe = /\[([^\]]+)\]\((\/[^)]+\.md)\)/g;
-    let last = 0, m, citeNum = 0;
+    let last = 0, m;
     while ((m = linkRe.exec(para))) {
       parts.push({ t: "text", v: para.slice(last, m.index) });
       parts.push({ t: "link", label: m[1], path: m[2] });
@@ -412,7 +439,7 @@ function renderAnswer(md) {
     parts.push({ t: "text", v: para.slice(last) });
     const html = parts.map(p => {
       if (p.t === "link") {
-        return `<a class="inline-cite" href="#" data-path="${esc(p.path)}">\u2197\ufe0e${esc(p.label)}</a>`;
+        return `<a class="inline-cite" href="#" data-path="${esc(p.path)}">↗︎${esc(p.label)}</a>`;
       }
       let s = esc(p.v);
       s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
@@ -444,14 +471,13 @@ function subjectOf(query) {
   return s || query.trim().replace(/[?.!]+$/, "");
 }
 
-/* ---------- DOM building ---------- */
-const conv = document.getElementById("conv");
-const convWrap = document.getElementById("convWrap");
-
-function scrollToEnd(smooth) {
-  convWrap.scrollTo({ top: convWrap.scrollHeight, behavior: smooth ? "smooth" : "auto" });
+/* ---------- markup builders ---------- */
+function userMarkup(text) {
+  return `<div class="msg">
+    <div class="role you"><span class="rmark"></span>You</div>
+    <div class="bubble-you">${esc(text)}</div>
+  </div>`;
 }
-
 function citeChips(paths) {
   const chips = paths.map((p, i) => {
     const n = NODES[p]; if (!n) return "";
@@ -469,62 +495,42 @@ function citeChips(paths) {
     <div class="chip-row">${chips}</div>
   </div>`;
 }
-
-function addUser(text) {
-  const el = document.createElement("div");
-  el.className = "msg";
-  el.innerHTML = `<div class="role you"><span class="rmark"></span>You</div>
-    <div class="bubble-you">${esc(text)}</div>`;
-  conv.appendChild(el);
-  return el;
-}
-
-function addAnswer(ans) {
-  const el = document.createElement("div");
-  el.className = "msg";
-  el.innerHTML = `<div class="role brain"><span class="rmark"></span>The brain</div>
+function answerMarkup(ans) {
+  return `<div class="msg">
+    <div class="role brain"><span class="rmark"></span>The brain</div>
     <div class="answer">${renderAnswer(ans.answer)}</div>
-    ${citeChips(ans.sources)}`;
-  conv.appendChild(el);
-  return el;
+    ${citeChips(ans.sources)}
+  </div>`;
 }
-
-function addNoNode(subject) {
-  const el = document.createElement("div");
-  el.className = "msg";
-  el.innerHTML = `<div class="role brain"><span class="rmark"></span>The brain</div>
+function noNodeMarkup(subject) {
+  return `<div class="msg">
+    <div class="role brain"><span class="rmark"></span>The brain</div>
     <div class="no-node">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
       <span>The brain has no node on <span class="missing">${esc(subject)}</span>.
-        <span class="hint">Nothing in your 7 indexed nodes matches this, so there's no grounded answer to give \u2014 rather than invent one, capture a note first and it'll become answerable.</span>
+        <span class="hint">Nothing in your 7 indexed nodes matches this, so there's no grounded answer to give — rather than invent one, capture a note first and it'll become answerable.</span>
       </span>
     </div>`;
-  conv.appendChild(el);
-  return el;
+}
+function thinkingMarkup() {
+  return `<div class="msg thinking-slot">
+    <div class="role brain"><span class="rmark"></span>The brain</div>
+    <div class="thinking">retrieving relevant nodes <span class="dots"><i></i><i></i><i></i></span></div>
+  </div>`;
 }
 
-function addThinking() {
-  const el = document.createElement("div");
-  el.className = "msg";
-  el.innerHTML = `<div class="role brain"><span class="rmark"></span>The brain</div>
-    <div class="thinking">retrieving relevant nodes <span class="dots"><i></i><i></i><i></i></span></div>`;
-  conv.appendChild(el);
-  return el;
-}
+/* ---------- DOM refs ---------- */
+const answers = document.getElementById("answers");
+const answersWrap = document.getElementById("answersWrap");
+const input = document.getElementById("input");
+const suggestRow = document.getElementById("suggestRow");
 
-/* Suggested-questions block (removed once a question is asked). */
-let suggestEl = null;
-function addSuggestions() {
-  suggestEl = document.createElement("div");
-  suggestEl.className = "msg suggest-block";
-  suggestEl.innerHTML = `<div class="suggest-label">Try asking</div>
-    <div class="suggest-row">
-      ${SUGGESTED.map(q => `<button class="suggest" type="button" data-q="${esc(q)}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path><circle cx="12" cy="12" r="10"></circle></svg>
-        ${esc(q)}
-      </button>`).join("")}
-    </div>`;
-  conv.appendChild(suggestEl);
+/* Build an exchange (question above its answer), inserted at the top. */
+function makeExchange(query) {
+  const block = document.createElement("div");
+  block.className = "exchange";
+  block.innerHTML = userMarkup(query);
+  return block;
 }
 
 /* ---------- ask flow ---------- */
@@ -532,43 +538,36 @@ let busy = false;
 function ask(query) {
   if (busy || !query.trim()) return;
   busy = true;
-  if (suggestEl) { suggestEl.remove(); suggestEl = null; }
-  addUser(query);
-  scrollToEnd(true);
-  const thinking = addThinking();
-  scrollToEnd(true);
+  const block = makeExchange(query);
+  block.insertAdjacentHTML("beforeend", thinkingMarkup());
+  answers.prepend(block);                       // newest first
+  answersWrap.scrollTo({ top: 0, behavior: "smooth" });
 
   setTimeout(() => {
-    thinking.remove();
+    const slot = block.querySelector(".thinking-slot");
+    if (slot) slot.remove();
     const hit = retrieve(query);
-    if (hit) addAnswer(hit);
-    else addNoNode(subjectOf(query));
-    scrollToEnd(true);
+    block.insertAdjacentHTML("beforeend", hit ? answerMarkup(hit) : noNodeMarkup(subjectOf(query)));
     busy = false;
     input.focus();
   }, 900);
 }
 
 /* ---------- init ---------- */
-// Intro header
-const intro = document.createElement("div");
-intro.className = "msg intro";
-intro.innerHTML = `<h1><span class="brainmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4 3 3 0 0 0-2 5 3 3 0 0 0 2 5 4 4 0 0 0 8 0 3 3 0 0 0 2-5 3 3 0 0 0-2-5 4 4 0 0 0-4-4z"></path></svg></span>Ask the brain</h1>
-  <p>Ask a question in natural language. The answer is synthesised <em>only</em> from your indexed nodes, and every claim links back to the exact <code>.md</code> nodes it drew from.</p>`;
-conv.appendChild(intro);
+// Suggested questions
+suggestRow.innerHTML = SUGGESTED.map(q => `<button class="suggest" type="button" data-q="${esc(q)}">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path><circle cx="12" cy="12" r="10"></circle></svg>
+  ${esc(q)}
+</button>`).join("");
 
-// Seed the conversation with a full example Q&A
-SEED.forEach(m => {
-  if (m.role === "you") addUser(m.text);
-  else addAnswer(ANSWERS[m.answerIndex]);
+// Seed example thread (newest-first: append so it sits below any new questions)
+SEED.forEach(s => {
+  const block = makeExchange(s.query);
+  block.insertAdjacentHTML("beforeend", answerMarkup(ANSWERS[s.answerIndex]));
+  answers.appendChild(block);
 });
 
-addSuggestions();
-
 /* ---------- interactions ---------- */
-const input = document.getElementById("input");
-const sendBtn = document.getElementById("send");
-
 function autoGrow() {
   input.style.height = "auto";
   input.style.height = Math.min(input.scrollHeight, 160) + "px";
@@ -616,12 +615,11 @@ function showToast(msg) {
 }
 
 document.getElementById("backBtn").addEventListener("click", () =>
-  showToast("\u2190 In the full app this returns to the graph view"));
+  showToast("← In the full app this returns to the graph view"));
 document.getElementById("backBtn").addEventListener("keydown", (e) => {
   if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.target.click(); }
 });
 
-scrollToEnd(false);
 input.focus();
 </script>
 </body>
