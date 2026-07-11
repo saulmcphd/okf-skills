@@ -48,7 +48,7 @@ portable as the bundle itself). Two steps:
    {
      "nodes": [
        {"id": "/concepts/concept-companion-planting.md", "label": "Companion planting",
-        "type": "concept", "tags": ["pest-control"], "degree": 7,
+        "type": "concept", "tags": ["pest-control"], "in_degree": 5, "out_degree": 2,
         "description": "…", "human_verified": false}
      ],
      "edges": [
@@ -57,15 +57,26 @@ portable as the bundle itself). Two steps:
    }
    ```
 2. **Render it** as a force-directed graph in one HTML file, colouring nodes **by `type`**, sizing them
-   **by centrality** (degree is a fine first proxy), and drawing edges **directed** (an arrow from the
-   linking node to the node it links).
+   **by centrality**, and drawing edges **directed** (an arrow from the linking node to the node it links).
+
+**Sizing a node — prefer in-degree.** A node's size should signal how *important* it is to the brain (its
+**centrality**). Choose the metric deliberately:
+- **In-degree (recommended)** — how many *other* nodes link **to** this one: its *referenced-ness* /
+  authority, like a citation count. A node the rest of the brain repeatedly points at is a genuine hub.
+- **Total degree (simpler proxy)** — in + out links combined. Easier, but it conflates "is referenced a
+  lot" with "links out a lot," so a node that merely lists many links looks like a hub it isn't. Fine for
+  a quick view; prefer in-degree when size is meant to convey importance.
+- **Scale for readability** — grow the radius **sub-linearly** (e.g. `r = base + k·√(metric)`) and **cap**
+  it, so a few mega-hubs don't dwarf everything. Expose the *same* metric everywhere it appears — the node
+  panel ("N references") and the centrality filter/slider — so they all agree.
 
 ### Features worth including (from plan §6A.1)
 - **Search** nodes by title/description.
 - **Filter** by `type`, `tag`, and centrality (hide the long tail; focus on hubs).
 - **Click a node → read it**: show its rendered content, its in/out links, its citations/references, its
   `provenance`, and its verification status — so the graph is a reader, not just a picture.
-- **Colour by type**, **size by centrality**; highlight a node's neighbourhood on hover.
+- **Colour by type**, **size by centrality** (in-degree — how referenced a node is; see *Sizing* above);
+  highlight a node's neighbourhood on hover.
 
 ---
 
