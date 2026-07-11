@@ -70,6 +70,9 @@ For every approved item:
 - **Cite primary sources.** Attribute claims to the original works the source rests on (if the new source
   *is* a primary work, cite it directly); never fabricate a citation or a DOI.
 - **One `reference` node per new source** (bibliographic + integrity frontmatter — see okf-node-types).
+- **For an academic source, harvest its reference list.** Extract the primary works the source cites into
+  the brain's **bibliography registry** (`references.json`) so each claim can be attached to a verified
+  **primary** work, not the secondary source — see **okf-bibliography**.
 - **Record provenance, separate from citations.** Tag each enriched node with where the addition came
   from (e.g. a `source-<slug>` frontmatter tag / `enriched_from`), so the brain always knows *which*
   source fed *which* section — without turning provenance into a citation.

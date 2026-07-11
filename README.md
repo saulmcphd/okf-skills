@@ -21,6 +21,7 @@ implementations (see [Credits](#credits)).
 | **Author** | `okf-concept-node` | Write a concept node: frontmatter, a maximum-detail self-contained body, `# Related`, and citations. |
 | | `okf-node-types` | Write the non-concept nodes: **entity**, **reference** (the one-per-source provenance layer), and **system**. |
 | | `okf-write-playbook` | Write a playbook: a reproducible, step-by-step procedure node. |
+| **Cite** | `okf-bibliography` | *Academic brains:* manage the references registry (`references.json`) — verified **primary** citations, no fabrication. |
 | **Use** | `okf-dashboard` | Build a graph explorer (see the brain) + an ask-the-brain grounded Q&A (query it). |
 | **Grow** | `okf-ingest-source` | Add a new PDF/URL safely: assess → **human approves** → enrich (new node vs. enrich existing). |
 | **Maintain** | `okf-gap-scan` | Find what's incomplete (missing/thin sections + coverage gaps) → a ranked enrichment backlog. |
@@ -67,6 +68,7 @@ okf-skills/
 │           ├── okf-create-bundle/SKILL.md
 │           ├── okf-concept-node/SKILL.md
 │           ├── okf-node-types/SKILL.md
+│           ├── okf-bibliography/SKILL.md
 │           ├── okf-write-playbook/SKILL.md
 │           ├── okf-dashboard/SKILL.md
 │           ├── okf-ingest-source/SKILL.md

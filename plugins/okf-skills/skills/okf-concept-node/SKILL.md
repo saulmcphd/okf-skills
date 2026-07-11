@@ -164,6 +164,9 @@ per bundle and be consistent. For an **academic / research brain**, apply this d
   sees citations, the pipeline tracks provenance.
 - **Never fabricate.** No invented citations or DOIs; if a generic fact has no clear primary source,
   leave it uncited rather than guessing.
+- **Draw from the bibliography registry.** In an academic brain, pull each `# References` entry from the
+  shared references registry (one verified record per work) rather than re-typing it, so citations are
+  consistent and every one resolves to a real source — see **okf-bibliography**.
 - **Match the house style.** If the brain backs a specific publication or site, mirror its citation
   style and depth. Pin the rules once in a bundle-level `CITATION-STYLE.md` (see okf-create-bundle).
 
