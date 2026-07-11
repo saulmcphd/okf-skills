@@ -164,7 +164,9 @@ artefacts:
 - `index` — (re)generate `index.md` + per-folder indexes (no frontmatter, bundle-relative links).
 - `graph` — write an interactive `okf-graph.html` (force-directed "brain", coloured by type).
 - `lint` — report orphan links, missing fields, and **thin concepts** (flag, then deepen). A fuller
-  lint also hunts **contradictions** between nodes, **stale claims**, and **coverage gaps** (an
+  lint also hunts **dangling source references** ("Table 1", "see chapter", "p. 42" — the node must
+  *embed* the content, not point at a source the reader lacks), **contradictions** between nodes,
+  **stale claims**, and **coverage gaps** (an
   important concept with no node of its own yet).
 - `python okf_tools.py all` runs all four. Graph/lint read edges from **markdown links**.
 

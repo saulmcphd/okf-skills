@@ -101,6 +101,27 @@ def extract_links(body: str) -> list[str]:
     return links
 
 
+# A self-contained node must EMBED content, never point at a source artifact the reader can't see.
+SOURCE_REF_RULES = [
+    ("numbered figure/table", re.compile(r"\b(?:Table|Figure|Box|Plate|Panel|Diagram|Chart)\s+\d+\b|\bFigs?\.?\s+\d+\b", re.I)),
+    ("(see fig/table/chapter…)", re.compile(r"\(\s*see\s+(?:fig|figure|table|box|chapter|section|pp?\.|page)\b", re.I)),
+    ("positional figure", re.compile(r"\b(?:figure|diagram|graph|chart|image|photograph|illustration|picture)\s+(?:above|below|opposite|overleaf)\b", re.I)),
+    ("page deferral (see/on p.)", re.compile(r"\b(?:see|on|from|at)\s+(?:pp?\.\s*|pages?\s+)\d", re.I)),
+    ("overleaf / opposite page", re.compile(r"\b(?:overleaf|opposite page|on the (?:previous|next|facing) page)\b", re.I)),
+    ("as shown in fig/table", re.compile(r"\bas\s+(?:shown|illustrated|depicted|seen)\s+in\s+(?:the\s+)?(?:fig|figure|table|diagram|graph|image|chart|box)\b", re.I)),
+    ("this/previous chapter/section", re.compile(r"\b(?:see\s+(?:the\s+)?|in\s+this\s+|in\s+the\s+(?:previous|next|following|preceding)\s+)(?:chapter|section)s?\b", re.I)),
+]
+
+
+def source_ref_hits(body: str) -> list[tuple[str, str]]:
+    """Dangling references to source artifacts (Table 1, see chapter, p. 42, the diagram above…) in a
+    node's PROSE — excluding the # References/# Citations list, where "pp. 100-120" is a legit citation.
+    A self-contained node embeds the content instead. Edit these rules for your domain if needed."""
+    m = re.search(r"^#\s*(?:References|Citations)\b", body, re.M | re.I)
+    prose = body[:m.start()] if m else body
+    return [(label, " ".join(mm.group(0).split())) for label, rx in SOURCE_REF_RULES for mm in rx.finditer(prose)]
+
+
 def write_index(nodes: dict) -> None:
     order = ["concepts", "entities", "references", "systems", "playbooks"]
     lines = ["# OKF Bundle Index", "",
@@ -147,6 +168,10 @@ def lint(nodes: dict) -> int:
                 problems += 1
         if n["type"] == "concept" and len(n["body"]) < THIN_CONCEPT_CHARS:
             print(f"THIN CONCEPT {n['path']} ({len(n['body'])} chars)")
+            problems += 1
+        refs = source_ref_hits(n["body"])
+        if refs:
+            print(f"DANGLING SOURCE REF {n['path']}: " + "; ".join(f'"{t}"' for _, t in refs[:2]))
             problems += 1
     linked_to = {t for n in nodes.values() for t in n["links"]}
     for path, n in nodes.items():
