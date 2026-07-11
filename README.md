@@ -36,7 +36,7 @@ The skills cross-reference each other, so an agent chains them naturally (scaffo
 
 ## Live dashboard demo
 
-The [`demo/`](demo/) folder has five **self-contained** HTML screens showing what the `okf-dashboard`
+The [`demo/`](demo/) folder has six **self-contained** HTML screens showing what the `okf-dashboard`
 skill produces (built over a small neutral sample brain — personal note-taking / PKM). Open any file in a
 browser: no build step, no server, no external requests.
 
@@ -47,6 +47,7 @@ browser: no build step, no server, no external requests.
 | Ask the brain | [`ask-the-brain.html`](demo/ask-the-brain.html) | Grounded Q&A — every answer cites its source nodes and admits when the brain has no node. |
 | Review proposed changes | [`review-proposed-changes.html`](demo/review-proposed-changes.html) | The ingest loop: enrich / new-node / contradiction cards, approved one-by-one before anything is written. |
 | Gap dashboard | [`gap-dashboard.html`](demo/gap-dashboard.html) | The enrichment backlog: nodes ranked by missing/thin sections, plus missing-node candidates. |
+| Missing nodes | [`missing-nodes.html`](demo/missing-nodes.html) | Missing-node candidates as their own screen: topics your nodes name but have no node for, with suggested type + create-node. |
 
 ## Tools (runnable reference implementations)
 
@@ -103,7 +104,7 @@ okf-skills/
 │           ├── okf-dashboard/SKILL.md
 │           ├── okf-ingest-source/SKILL.md
 │           └── okf-gap-scan/SKILL.md
-├── demo/                          # five self-contained dashboard screens (open in a browser)
+├── demo/                          # six self-contained dashboard screens (open in a browser)
 ├── tools/                         # runnable reference implementations (okf_tools.py, gap_scan.py)
 ├── screenshots/                   # images used in this README
 ├── README.md

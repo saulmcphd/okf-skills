@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missing Nodes · second-brain.okf</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --panel-2: #f0f2f5;
+    --border: #e3e5ea;
+    --border-soft: #d5d8e0;
+    --border-strong: #c2c6cf;
+    --ink: #1a1c22;
+    --ink-dim: #4a4e5a;
+    --muted: #6b7280;
+    --muted-2: #9aa0ac;
+    --link: #2563c9;
+    --link-hover: #1b4fb0;
+    --concept: #2563c9;
+    --entity: #9a6a00;
+    --playbook: #1c8452;
+    --reference: #7c3aad;
+    --system: #c0392b;
+    --red: #c0392b;
+    --amber: #9a6a00;
+    --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { color: var(--link-hover); }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  .shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* Header — matches Gap Dashboard */
+  header {
+    flex: 0 0 auto;
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--panel); z-index: 20;
+  }
+  header .title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  header .path { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  header .right { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+  .intro { padding: 26px 22px 6px; max-width: 1240px; margin: 0 auto; width: 100%; display: flex; align-items: flex-start; gap: 16px; }
+  .intro .txt { min-width: 0; }
+  .intro h1 { font-size: 25px; font-weight: 700; letter-spacing: -0.02em; }
+  .intro p { color: var(--ink-dim); font-size: 14.5px; margin-top: 6px; max-width: 720px; text-wrap: pretty; }
+  .total-badge {
+    margin-left: auto; flex: 0 0 auto;
+    font-family: var(--mono); text-align: center;
+    background: var(--panel); border: 1px solid var(--border-soft); border-radius: 12px;
+    padding: 10px 18px; min-width: 96px;
+  }
+  .total-badge .n { display: block; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  .total-badge .l { display: block; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+
+  /* Stats strip */
+  .stats { display: flex; gap: 22px; flex-wrap: wrap; margin: 4px 0 4px; padding: 16px 22px; max-width: 1240px; margin-left: auto; margin-right: auto; width: 100%; }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat .v { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; font-family: var(--mono); }
+  .stat .k { font-size: 11px; font-family: var(--mono); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+  .stat .sep { width: 1px; background: var(--border); align-self: stretch; }
+
+  .wrap { max-width: 1240px; margin: 0 auto; width: 100%; padding: 6px 22px 80px; }
+
+  /* Toolbar */
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip-btn {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+    color: var(--ink-dim); background: var(--panel); border: 1px solid var(--border-soft);
+    padding: 5px 11px; border-radius: 999px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 7px;
+    transition: border-color .14s, color .14s, background .14s;
+  }
+  .chip-btn:hover { color: var(--ink); border-color: var(--border-strong); }
+  .chip-btn.active { color: var(--ink); background: var(--panel-2); border-color: var(--border-strong); }
+  .chip-btn .tdot { width: 8px; height: 8px; border-radius: 50%; }
+  .chip-btn .cn { color: var(--muted-2); }
+  .chip-btn.active .cn { color: var(--ink-dim); }
+
+  .sortwrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .sortwrap label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  select.sort {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    background: var(--panel); border: 1px solid var(--border-soft); border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237c8296' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 9px center; padding-right: 28px;
+  }
+  select.sort:hover { border-color: var(--border-strong); }
+
+  /* Grid of candidate cards */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; align-items: start; }
+
+  .cand {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 0;
+    transition: border-color .14s, box-shadow .14s, opacity .2s, transform .2s;
+  }
+  .cand:hover { border-color: var(--border-strong); box-shadow: 0 4px 18px rgba(20,25,40,.05); }
+  .cand.dismissed { opacity: .45; }
+  .cand.dismissed .cand-actions .primary { pointer-events: none; }
+
+  .cand-head { display: flex; align-items: flex-start; gap: 14px; }
+  .cand-titlewrap { min-width: 0; flex: 1 1 auto; }
+  .cand-name { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .cand-name .tdot { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 50%; }
+  .cand-suggested { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: .02em; }
+  .cand-suggested b { font-weight: 700; }
+
+  .cand-count { flex: 0 0 auto; text-align: right; font-family: var(--mono); line-height: 1; }
+  .cand-count .n { font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .cand-count .n .x { font-size: 16px; color: var(--muted-2); font-weight: 600; }
+  .cand-count .l { display: block; font-size: 9.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted-2); margin-top: 5px; }
+
+  .cand-why { font-size: 13.5px; color: var(--ink-dim); margin-top: 14px; text-wrap: pretty; }
+
+  .refs-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 16px; margin-bottom: 8px; }
+  .cand-refs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .rf {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
+    background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px;
+    padding: 3px 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color .12s, color .12s, background .12s;
+  }
+  .rf:hover { color: var(--link-hover); border-color: var(--border-strong); background: var(--panel); }
+  .rf .tdot { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 auto; }
+
+  .cand-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .btn {
+    font-family: var(--sans); font-size: 12.5px; font-weight: 600; cursor: pointer;
+    border-radius: 8px; padding: 8px 14px; border: 1px solid transparent;
+    display: inline-flex; align-items: center; gap: 6px; transition: background .12s, border-color .12s, color .12s;
+  }
+  .btn svg { width: 14px; height: 14px; }
+  .btn.primary { background: var(--ink); color: #fff; }
+  .btn.primary:hover { background: #000; }
+  .btn.secondary { background: var(--panel); color: var(--muted); border-color: var(--border-soft); }
+  .btn.secondary:hover { color: var(--ink-dim); border-color: var(--border-strong); }
+  .cand-actions .primary { flex: 1 1 auto; justify-content: center; }
+
+  .restore { font-family: var(--mono); font-size: 11px; color: var(--muted); cursor: pointer; margin-top: 14px; align-self: flex-start; }
+  .restore:hover { color: var(--link-hover); }
+  .restore-hidden { display: none; }
+
+  .empty-state { padding: 60px 16px; text-align: center; color: var(--muted-2); font-family: var(--mono); font-size: 13px; grid-column: 1 / -1; }
+
+  .toast {
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--panel-2); border: 1px solid var(--border-soft);
+    color: var(--ink-dim); font-size: 13px; padding: 10px 16px; border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(15,20,30,.15); opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s; z-index: 50; font-family: var(--mono);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast code { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <span class="title">Missing nodes</span>
+    <span class="path">second-brain.okf</span>
+    <span class="right" id="headerRight"></span>
+  </header>
+
+  <div class="intro">
+    <div class="txt">
+      <h1>Missing nodes</h1>
+      <p>Topics your nodes name but have no node of their own. Detected from broken links and repeated bare mentions, ranked by how often the brain reaches for a topic it can't link to.</p>
+    </div>
+    <div class="total-badge">
+      <span class="n" id="totalN">0</span>
+      <span class="l">candidates</span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="wrap">
+    <div class="toolbar">
+      <div class="filters" id="filters"></div>
+      <div class="sortwrap">
+        <label for="sortSel">sort</label>
+        <select class="sort" id="sortSel">
+          <option value="mentions">Most mentioned</option>
+          <option value="alpha">Alphabetical</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------------------------------------------------------------------
+   Missing-node candidates: topics the brain names repeatedly but has no
+   node for. Each carries a suggested type, a reason, and the nodes that
+   reference it.
+--------------------------------------------------------------------------- */
+const TYPE_META = {
+  concept:   { color: "#2563c9", label: "concept" },
+  entity:    { color: "#9a6a00", label: "entity" },
+  playbook:  { color: "#1c8452", label: "playbook" },
+  reference: { color: "#7c3aad", label: "reference" },
+  system:    { color: "#c0392b", label: "system" }
+};
+
+const CANDIDATES = [
+  {
+    name: "Spacing effect", mentions: 6, suggestedType: "concept",
+    why: "Cited as the mechanism behind spaced repetition across three notes but never defined on its own.",
+    refs: [
+      { title: "Spaced Repetition", type: "concept" },
+      { title: "Atomic Notes", type: "concept" },
+      { title: "Daily Note Review", type: "playbook" }
+    ]
+  },
+  {
+    name: "Niklas Luhmann", mentions: 5, suggestedType: "entity",
+    why: "Named as the originator of the slip-box in every Zettelkasten-adjacent note, yet has no entity node.",
+    refs: [
+      { title: "Zettelkasten", type: "system" },
+      { title: "How to Take Smart Notes", type: "reference" }
+    ]
+  },
+  {
+    name: "Mnemonic medium", mentions: 4, suggestedType: "concept",
+    why: "Referenced under Matuschak's notable work as a broken link target; the concept carries its own literature.",
+    refs: [
+      { title: "Andy Matuschak", type: "entity" },
+      { title: "Tools for Thought", type: "concept" }
+    ]
+  },
+  {
+    name: "Barbara Oakley", mentions: 4, suggestedType: "entity",
+    why: "Quoted on focused vs. diffuse thinking in two concept notes but never given a person node.",
+    refs: [
+      { title: "Spaced Repetition", type: "concept" },
+      { title: "Tools for Thought", type: "concept" }
+    ]
+  },
+  {
+    name: "Progressive summarization", mentions: 3, suggestedType: "playbook",
+    why: "Mentioned as an alternative to daily review; the steps are described inline but no playbook exists.",
+    refs: [
+      { title: "Daily Note Review", type: "playbook" },
+      { title: "Weekly Graph Audit", type: "playbook" }
+    ]
+  },
+  {
+    name: "Forgetting curve", mentions: 3, suggestedType: "reference",
+    why: "Ebbinghaus's curve is invoked in Spaced Repetition with no source node to cite.",
+    refs: [
+      { title: "Spaced Repetition", type: "concept" }
+    ]
+  },
+  {
+    name: "Sönke Ahrens", mentions: 3, suggestedType: "entity",
+    why: "Author repeatedly attributed for smart-note methodology; sits only inside a reference note's citation line.",
+    refs: [
+      { title: "How to Take Smart Notes", type: "reference" },
+      { title: "Atomic Notes", type: "concept" }
+    ]
+  },
+  {
+    name: "Inbox processing", mentions: 2, suggestedType: "playbook",
+    why: "Two playbooks assume a triage step for raw captures that is never written up as its own procedure.",
+    refs: [
+      { title: "Daily Note Review", type: "playbook" },
+      { title: "Weekly Graph Audit", type: "playbook" }
+    ]
+  }
+];
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* ---------- state ---------- */
+let typeFilter = "all";
+let sortMode = "mentions";
+const dismissed = new Set();
+
+const FILTER_TYPES = ["all","concept","entity","playbook","reference","system"];
+
+/* ---------- header + total ---------- */
+function renderHeader(){
+  const concepts = CANDIDATES.filter(c=>c.suggestedType==="concept").length;
+  const entities = CANDIDATES.filter(c=>c.suggestedType==="entity").length;
+  document.getElementById("headerRight").textContent =
+    `${CANDIDATES.length} candidates · ${concepts} concepts · ${entities} entities`;
+  document.getElementById("totalN").textContent = CANDIDATES.length;
+}
+
+/* ---------- stats strip ---------- */
+function renderStats(){
+  const concepts = CANDIDATES.filter(c=>c.suggestedType==="concept").length;
+  const entities = CANDIDATES.filter(c=>c.suggestedType==="entity").length;
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><span class="v">${CANDIDATES.length}</span><span class="k">Total candidates</span></div>
+    <div class="sep"></div>
+    <div class="stat"><span class="v" style="color:var(--concept)">${concepts}</span><span class="k">Suggested concepts</span></div>
+    <div class="sep"></div>
+    <div class="stat"><span class="v" style="color:var(--entity)">${entities}</span><span class="k">Suggested entities</span></div>`;
+}
+
+/* ---------- filters ---------- */
+function renderFilters(){
+  const el = document.getElementById("filters");
+  el.innerHTML = FILTER_TYPES.map(t=>{
+    const active = t===typeFilter ? " active" : "";
+    if(t==="all"){
+      return `<button class="chip-btn${active}" data-type="all">All<span class="cn">${CANDIDATES.length}</span></button>`;
+    }
+    const m = TYPE_META[t];
+    const n = CANDIDATES.filter(x=>x.suggestedType===t).length;
+    if(!n) return "";
+    return `<button class="chip-btn${active}" data-type="${t}"><span class="tdot" style="background:${m.color}"></span>${m.label}<span class="cn">${n}</span></button>`;
+  }).join("");
+}
+
+/* ---------- grid ---------- */
+function sortCandidates(list){
+  const arr=[...list];
+  if(sortMode==="mentions") arr.sort((a,b)=> b.mentions-a.mentions || a.name.localeCompare(b.name));
+  else if(sortMode==="alpha") arr.sort((a,b)=> a.name.localeCompare(b.name));
+  return arr;
+}
+function renderGrid(){
+  const list = sortCandidates(CANDIDATES.filter(c=> typeFilter==="all" || c.suggestedType===typeFilter));
+  const grid = document.getElementById("grid");
+  if(!list.length){
+    grid.innerHTML = `<div class="empty-state">No suggested ${typeFilter} nodes are missing.</div>`;
+    return;
+  }
+  grid.innerHTML = list.map(c=>{
+    const m = TYPE_META[c.suggestedType];
+    const isD = dismissed.has(c.name);
+    const refs = c.refs.map(r=>{
+      const rc = TYPE_META[r.type].color;
+      return `<span class="rf" data-open="${esc(r.title)}"><span class="tdot" style="background:${rc}"></span>${esc(r.title)}</span>`;
+    }).join("");
+    return `<article class="cand${isD?' dismissed':''}" data-name="${esc(c.name)}">
+      <div class="cand-head">
+        <div class="cand-titlewrap">
+          <div class="cand-name"><span class="tdot" style="background:${m.color}"></span>${esc(c.name)}</div>
+          <div class="cand-suggested">suggested: <b style="color:${m.color}">${m.label}</b></div>
+        </div>
+        <div class="cand-count">
+          <span class="n">${c.mentions}<span class="x">×</span></span>
+          <span class="l">mentions</span>
+        </div>
+      </div>
+      <p class="cand-why">${esc(c.why)}</p>
+      <div class="refs-label">Referenced by</div>
+      <div class="cand-refs">${refs}</div>
+      <div class="cand-actions">
+        <button class="btn primary" data-create="${esc(c.name)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Create node
+        </button>
+        <button class="btn secondary" data-dismiss="${esc(c.name)}">${isD?'Dismissed':'Dismiss'}</button>
+      </div>
+      <span class="restore${isD?'':' restore-hidden'}" data-restore="${esc(c.name)}">↩ Restore candidate</span>
+    </article>`;
+  }).join("");
+}
+
+/* ---------- toast ---------- */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.innerHTML=msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+/* ---------- events ---------- */
+document.getElementById("filters").addEventListener("click",e=>{
+  const b=e.target.closest("[data-type]"); if(!b) return;
+  typeFilter=b.getAttribute("data-type");
+  renderFilters(); renderGrid();
+});
+document.getElementById("sortSel").addEventListener("change",e=>{
+  sortMode=e.target.value; renderGrid();
+});
+document.getElementById("grid").addEventListener("click",e=>{
+  const create=e.target.closest("[data-create]");
+  if(create){
+    const name=create.getAttribute("data-create");
+    const c=CANDIDATES.find(x=>x.name===name);
+    const m=TYPE_META[c.suggestedType];
+    showToast(`Drafting <code>${m.label}/${esc(name.toLowerCase().replace(/\s+/g,'-'))}</code>`);
+    return;
+  }
+  const dis=e.target.closest("[data-dismiss]");
+  if(dis){
+    dismissed.add(dis.getAttribute("data-dismiss"));
+    renderGrid();
+    return;
+  }
+  const res=e.target.closest("[data-restore]");
+  if(res){
+    dismissed.delete(res.getAttribute("data-restore"));
+    renderGrid();
+    return;
+  }
+  const ref=e.target.closest("[data-open]");
+  if(ref){
+    showToast(`Open <code>${esc(ref.getAttribute("data-open"))}</code>`);
+  }
+});
+
+/* ---------- init ---------- */
+renderHeader();
+renderStats();
+renderFilters();
+renderGrid();
+</script>
+</body>
+</html>

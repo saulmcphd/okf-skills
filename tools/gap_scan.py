@@ -250,6 +250,12 @@ def main() -> None:
     html = replace_js_array(html, "CANDIDATES", json.dumps(candidates, ensure_ascii=False))
     (bundle / "gap-dashboard.html").write_text(html, encoding="utf-8")
 
+    missing_tmpl = Path(__file__).resolve().parent / "missing_nodes_template.html"
+    if missing_tmpl.exists():
+        mh = replace_js_array(missing_tmpl.read_text(encoding="utf-8"), "CANDIDATES",
+                              json.dumps(candidates, ensure_ascii=False))
+        (bundle / "missing-nodes.html").write_text(mh, encoding="utf-8")
+
     print(f"scanned {scanned} nodes -> {len(incomplete)} incomplete ({tmiss} missing + {tthin} thin), "
           f"{len(candidates)} candidates")
     print(f"wrote {bundle / 'gaps.json'}")
