@@ -91,7 +91,10 @@ The query pattern, and the integrity bar that makes it trustworthy.
    curated map.
 2. **Select the few relevant nodes** by their descriptions (curated navigation, not vector search).
 3. **Open only those nodes** (and follow their `# Related` links one hop if needed).
-4. **Synthesise a grounded answer** from what those nodes actually say.
+4. **Synthesise a grounded answer** from what those nodes actually say — **thematically, not as a list**.
+   When the answer draws on several nodes, weave them by *theme* (consensus, tension, nuance) rather than
+   node-by-node ("Node A says…; Node B says…"), weigh evidence quality where sources differ, and use
+   bridging language. See the **information-synthesis** skill for the method.
 
 ### The hard integrity rule (non-negotiable — plan §6A.2)
 - **Ground every claim in the nodes.** The answer must **cite the nodes it drew on and their primary

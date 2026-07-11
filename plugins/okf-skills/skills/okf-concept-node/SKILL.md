@@ -77,6 +77,10 @@ timestamp: 2026-07-11           # ISO-8601 date or datetime
 - **Citation discipline.** Base every factual claim on the source; quote verbatim for lists / numbers /
   definitions. **Never fill a genuine gap with outside knowledge** — if the source doesn't cover
   something, link to the concept that does; don't invent.
+- **Synthesise across sources, don't list them.** When a node draws on more than one source, weave them
+  by *theme* — consensus, tension, nuance — not source-by-source ("Gross says…; the IB text says…"). A
+  well-synthesised node reads as one coherent account, not a stack of summaries. See the
+  **information-synthesis** skill.
 - **Verify numbered ranges against the FULL source**, not a truncated/`head`-limited view, before
   trusting *or* flagging a numbered item.
 - **Integrate, don't duplicate.** Before creating a node, check `index.md` for one that already covers
