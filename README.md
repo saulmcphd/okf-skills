@@ -1,8 +1,13 @@
 # OKF Skills
 
-Seven skills for building and using an **OKF (Open Knowledge Format)** "second brain" — a portable,
-vendor-neutral graph of interlinked markdown files that both humans and AI agents can read. No database,
-no runtime, no embeddings.
+Eight skills — plus runnable tooling — for building and using an **OKF (Open Knowledge Format)** "second
+brain": a portable, vendor-neutral graph of interlinked markdown files that both humans and AI agents can
+read. No database, no runtime, no embeddings.
+
+![OKF graph explorer — nodes coloured by type, sized by in-degree, with type/tag/centrality filters](screenshots/graph-explorer.png)
+
+<sub>The graph explorer from the `okf-dashboard` skill (sample brain). Nodes are coloured by type and
+sized by how often they're referenced; references/systems are toggled off by default.</sub>
 
 These skills are **domain-agnostic**: use them to build a gardening brain, an academic/research brain, a
 company wiki, or anything else. They're distilled from Google's OKF spec and two reference
@@ -42,6 +47,17 @@ browser: no build step, no server, no external requests.
 | Ask the brain | [`ask-the-brain.html`](demo/ask-the-brain.html) | Grounded Q&A — every answer cites its source nodes and admits when the brain has no node. |
 | Review proposed changes | [`review-proposed-changes.html`](demo/review-proposed-changes.html) | The ingest loop: enrich / new-node / contradiction cards, approved one-by-one before anything is written. |
 | Gap dashboard | [`gap-dashboard.html`](demo/gap-dashboard.html) | The enrichment backlog: nodes ranked by missing/thin sections, plus missing-node candidates. |
+
+## Tools (runnable reference implementations)
+
+The [`tools/`](tools/) folder has domain-agnostic Python (stdlib only) that *runs* what the skills
+describe — drop it into `<your-bundle>/tools/`:
+
+- **`okf_tools.py`** — `index` / `graph` / `lint` (backs `okf-create-bundle` + `okf-dashboard`).
+- **`gap_scan.py`** — scores every node's sections and writes `gaps.json` + a self-contained
+  `gap-dashboard.html` (backs `okf-gap-scan`); `SCHEMA` is an editable config at the top.
+
+See [`tools/README.md`](tools/README.md). They're references to adapt, not a framework.
 
 ## Install
 
@@ -88,6 +104,8 @@ okf-skills/
 │           ├── okf-ingest-source/SKILL.md
 │           └── okf-gap-scan/SKILL.md
 ├── demo/                          # five self-contained dashboard screens (open in a browser)
+├── tools/                         # runnable reference implementations (okf_tools.py, gap_scan.py)
+├── screenshots/                   # images used in this README
 ├── README.md
 └── LICENSE
 ```

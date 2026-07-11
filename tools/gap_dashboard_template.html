@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gap Dashboard · second-brain.okf</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --panel-2: #f0f2f5;
+    --border: #e3e5ea;
+    --border-soft: #d5d8e0;
+    --border-strong: #c2c6cf;
+    --ink: #1a1c22;
+    --ink-dim: #4a4e5a;
+    --muted: #6b7280;
+    --muted-2: #9aa0ac;
+    --link: #2563c9;
+    --link-hover: #1b4fb0;
+    --concept: #2563c9;
+    --entity: #9a6a00;
+    --playbook: #1c8452;
+    --reference: #7c3aad;
+    --system: #c0392b;
+    --red: #c0392b;
+    --amber: #9a6a00;
+    --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { color: var(--link-hover); }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  .shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* Header */
+  header {
+    flex: 0 0 auto;
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--panel); z-index: 20;
+  }
+  header .title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  header .path { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  header .right { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+  .intro { padding: 26px 22px 6px; max-width: 1240px; margin: 0 auto; width: 100%; }
+  .intro h1 { font-size: 25px; font-weight: 700; letter-spacing: -0.02em; }
+  .intro p { color: var(--ink-dim); font-size: 14.5px; margin-top: 6px; max-width: 720px; text-wrap: pretty; }
+
+  .wrap { max-width: 1240px; margin: 0 auto; width: 100%; padding: 18px 22px 80px; display: grid; grid-template-columns: minmax(0,1fr) 340px; gap: 26px; align-items: start; }
+  @media (max-width: 940px) { .wrap { grid-template-columns: 1fr; } }
+
+  /* Section heads */
+  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .sec-head h2 { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-family: var(--mono); color: var(--ink-dim); }
+  .sec-head .count { font-family: var(--mono); font-size: 11px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; padding: 1px 8px; }
+
+  /* Toolbar */
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip-btn {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+    color: var(--ink-dim); background: var(--panel); border: 1px solid var(--border-soft);
+    padding: 5px 11px; border-radius: 999px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 7px;
+    transition: border-color .14s, color .14s, background .14s;
+  }
+  .chip-btn:hover { color: var(--ink); border-color: var(--border-strong); }
+  .chip-btn.active { color: var(--ink); background: var(--panel-2); border-color: var(--border-strong); }
+  .chip-btn .tdot { width: 8px; height: 8px; border-radius: 50%; }
+  .sortwrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .sortwrap label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  select.sort {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    background: var(--panel); border: 1px solid var(--border-soft); border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237c8296' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 9px center; padding-right: 28px;
+  }
+  select.sort:hover { border-color: var(--border-strong); }
+
+  /* Table */
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+    padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--panel-2);
+    white-space: nowrap;
+  }
+  thead th.num { text-align: center; }
+  tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background .12s; }
+  tbody tr:last-child { border-bottom: 0; }
+  tbody tr:hover { background: var(--panel-2); }
+  tbody tr.open { background: var(--panel-2); }
+  td { padding: 13px 16px; vertical-align: middle; }
+
+  .rank { text-align: center; }
+  .rank .rnum { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--ink); }
+  .rank .rbar { height: 3px; border-radius: 2px; background: var(--border-soft); margin-top: 5px; overflow: hidden; }
+  .rank .rbar > span { display: block; height: 100%; background: var(--link); border-radius: 2px; }
+
+  .node-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .node-cell .tdot { flex: 0 0 auto; width: 9px; height: 9px; border-radius: 50%; }
+  .node-cell .nt { min-width: 0; }
+  .node-cell .ntitle { font-size: 14px; font-weight: 600; color: var(--ink); }
+  tbody tr:hover .node-cell .ntitle { color: var(--link-hover); }
+  .node-cell .npath { font-family: var(--mono); font-size: 11px; color: var(--muted-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .type-tag { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-dim); border: 1px solid var(--border-soft); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+
+  .gap-chips { display: flex; gap: 7px; flex-wrap: wrap; }
+  .gchip { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .gchip .cdot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .gchip.miss { color: #c0392b; background: rgba(192,57,43,.10); border: 1px solid rgba(192,57,43,.30); }
+  .gchip.thin { color: #9a6a00; background: rgba(154,106,0,.10); border: 1px solid rgba(154,106,0,.30); }
+  .gchip.none { color: var(--muted-2); background: transparent; border: 1px solid var(--border); }
+
+  .comp-cell { min-width: 118px; }
+  .comp-bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+  .comp-bar > span { display: block; height: 100%; border-radius: 3px; }
+  .comp-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+  .chev { color: var(--muted-2); transition: transform .16s; }
+  tr.open .chev { transform: rotate(90deg); color: var(--ink-dim); }
+  .chev svg { width: 15px; height: 15px; display: block; }
+
+  /* Expanded detail row */
+  tr.detail-row > td { padding: 0; border-bottom: 1px solid var(--border); }
+  tr.detail-row:last-child > td { border-bottom: 0; }
+  .detail { padding: 4px 16px 18px 46px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 640px) { .detail { grid-template-columns: 1fr; } }
+  .detail .dh { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 9px; display: flex; align-items: center; gap: 7px; }
+  .detail .dh .pin { width: 6px; height: 6px; border-radius: 50%; }
+  .seclist { display: flex; flex-direction: column; gap: 6px; }
+  .secitem { font-size: 13px; display: flex; align-items: baseline; gap: 8px; }
+  .secitem .mark { font-family: var(--mono); font-size: 11px; flex: 0 0 auto; }
+  .secitem .sn { color: var(--ink-dim); font-weight: 600; }
+  .secitem .sd { color: var(--muted); font-size: 12px; }
+  .secitem.miss .mark { color: var(--red); }
+  .secitem.thin .mark { color: var(--amber); }
+  .detail .empty { color: var(--muted-2); font-size: 12.5px; font-style: italic; }
+
+  /* Candidates panel */
+  .cand-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 6px 6px; }
+  .cand { padding: 12px 12px; border-radius: 9px; transition: background .12s; }
+  .cand:hover { background: var(--panel-2); }
+  .cand + .cand { border-top: 1px solid var(--border); }
+  .cand-top { display: flex; align-items: baseline; gap: 8px; }
+  .cand-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .cand-count { margin-left: auto; font-family: var(--mono); font-size: 11px; font-weight: 700; color: #c0392b; background: rgba(192,57,43,.10); border: 1px solid rgba(192,57,43,.30); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+  .cand-sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; text-wrap: pretty; }
+  .cand-refs { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 5px; }
+  .cand-refs .rf { font-family: var(--mono); font-size: 10.5px; color: var(--ink-dim); background: var(--panel-2); border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; }
+  .cand-refs .rf .tdot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+  .cand-cta { font-family: var(--mono); font-size: 11px; font-weight: 600; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; color: var(--playbook); cursor: pointer; }
+  .cand-cta svg { width: 13px; height: 13px; }
+  .cand-suggested { font-family: var(--mono); font-size: 10.5px; color: var(--muted-2); }
+
+  .panel-note { font-size: 12px; color: var(--muted); margin: 12px 4px 0; text-wrap: pretty; }
+
+  /* Summary strip */
+  .stats { display: flex; gap: 22px; flex-wrap: wrap; margin: 4px 0 22px; padding: 16px 22px; }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat .v { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; font-family: var(--mono); }
+  .stat .k { font-size: 11px; font-family: var(--mono); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+  .stat .v.red { color: #c0392b; }
+  .stat .v.amber { color: #9a6a00; }
+
+  .empty-state { padding: 40px 16px; text-align: center; color: var(--muted-2); font-family: var(--mono); font-size: 13px; }
+
+  .toast {
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--panel-2); border: 1px solid var(--border-soft);
+    color: var(--ink-dim); font-size: 13px; padding: 10px 16px; border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(15,20,30,.15); opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s; z-index: 50; font-family: var(--mono);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast code { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <span class="title">Gap Dashboard</span>
+    <span class="path">second-brain.okf</span>
+    <span class="right" id="headerRight"></span>
+  </header>
+
+  <div class="intro">
+    <h1>Enrichment backlog</h1>
+    <p>Nodes ranked by how incomplete they are against their type template, weighted toward high-centrality nodes where gaps hurt most. Below-right: topics the brain repeatedly names but has never given a node of their own.</p>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="wrap">
+    <section>
+      <div class="toolbar">
+        <div class="filters" id="filters"></div>
+        <div class="sortwrap">
+          <label for="sortSel">sort</label>
+          <select class="sort" id="sortSel">
+            <option value="centrality">Centrality rank</option>
+            <option value="missing">Most missing sections</option>
+            <option value="thin">Most thin sections</option>
+            <option value="completeness">Lowest completeness</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sec-head">
+        <h2>Incomplete nodes</h2>
+        <span class="count" id="rowCount"></span>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th class="num" style="width:64px;">Rank</th>
+              <th>Node</th>
+              <th style="width:130px;">Gaps</th>
+              <th style="width:150px;">Completeness</th>
+              <th style="width:36px;"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside>
+      <div class="sec-head">
+        <h2>Missing node candidates</h2>
+        <span class="count" id="candCount"></span>
+      </div>
+      <div class="cand-card" id="candList"></div>
+      <p class="panel-note">Detected from broken links and repeated bare mentions across existing nodes. Ranked by how often the brain reaches for a topic it can't link to.</p>
+    </aside>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------------------------------------------------------------------
+   Sample OKF gap-analysis data.
+   Each node lists the sections its type template expects. Each section is
+   scored: "ok" (present + substantial), "thin" (present but stub), or
+   "missing" (absent entirely). Centrality is a precomputed graph score.
+--------------------------------------------------------------------------- */
+const TYPE_META = {
+  concept:   { color: "#6f9bff", label: "Concept",   folder: "concepts" },
+  entity:    { color: "#e0a34d", label: "Entity",    folder: "entities" },
+  playbook:  { color: "#55c39a", label: "Playbook",  folder: "playbooks" },
+  reference: { color: "#d07fd0", label: "Reference", folder: "references" },
+  system:    { color: "#d9776c", label: "System",    folder: "systems" }
+};
+
+// centrality: 0..1 (share of graph reachability). rank derived below.
+const NODES = [
+  {
+    path: "/concepts/spaced-repetition.md", title: "Spaced Repetition", type: "concept", centrality: 0.86,
+    sections: [
+      { name: "Definition", state: "ok" },
+      { name: "Mechanism", state: "thin", note: "one sentence; no forgetting-curve detail" },
+      { name: "Evidence base", state: "missing", note: "no studies or citations" },
+      { name: "Related concepts", state: "ok" },
+      { name: "References", state: "missing", note: "body cites work with no reference node" }
+    ]
+  },
+  {
+    path: "/playbooks/daily-note-review.md", title: "Daily Note Review", type: "playbook", centrality: 0.74,
+    sections: [
+      { name: "Trigger", state: "ok" },
+      { name: "Steps", state: "ok" },
+      { name: "Failure modes", state: "missing", note: "no section on what breaks the loop" },
+      { name: "Metrics", state: "missing", note: "no success signal defined" },
+      { name: "Related playbooks", state: "thin", note: "links out but not back" }
+    ]
+  },
+  {
+    path: "/entities/andy-matuschak.md", title: "Andy Matuschak", type: "entity", centrality: 0.81,
+    sections: [
+      { name: "Summary", state: "ok" },
+      { name: "Notable work", state: "thin", note: "mnemonic medium unlinked" },
+      { name: "Affiliations", state: "missing" },
+      { name: "Key ideas", state: "ok" },
+      { name: "Sources", state: "thin", note: "no primary source node" }
+    ]
+  },
+  {
+    path: "/systems/zettelkasten.md", title: "Zettelkasten", type: "system", centrality: 0.79,
+    sections: [
+      { name: "Overview", state: "ok" },
+      { name: "Components", state: "thin", note: "lists parts, no detail per part" },
+      { name: "Workflow", state: "missing", note: "no end-to-end flow" },
+      { name: "History", state: "missing", note: "Luhmann named but not covered" },
+      { name: "Tradeoffs", state: "missing" },
+      { name: "Related systems", state: "ok" }
+    ]
+  },
+  {
+    path: "/concepts/atomic-notes.md", title: "Atomic Notes", type: "concept", centrality: 0.68,
+    sections: [
+      { name: "Definition", state: "ok" },
+      { name: "Mechanism", state: "ok" },
+      { name: "Evidence base", state: "missing" },
+      { name: "Related concepts", state: "thin", note: "only one outgoing link" },
+      { name: "References", state: "thin", note: "one uncited claim" }
+    ]
+  },
+  {
+    path: "/references/how-to-take-smart-notes.md", title: "How to Take Smart Notes", type: "reference", centrality: 0.55,
+    sections: [
+      { name: "Citation", state: "ok" },
+      { name: "Summary", state: "thin", note: "two lines only" },
+      { name: "Key claims", state: "missing", note: "no extracted claims" },
+      { name: "Where cited", state: "missing", note: "no back-references listed" }
+    ]
+  },
+  {
+    path: "/concepts/tools-for-thought.md", title: "Tools for Thought", type: "concept", centrality: 0.62,
+    sections: [
+      { name: "Definition", state: "thin", note: "borrowed from entity note" },
+      { name: "Mechanism", state: "missing" },
+      { name: "Evidence base", state: "missing" },
+      { name: "Related concepts", state: "ok" },
+      { name: "References", state: "missing" }
+    ]
+  },
+  {
+    path: "/playbooks/weekly-graph-audit.md", title: "Weekly Graph Audit", type: "playbook", centrality: 0.41,
+    sections: [
+      { name: "Trigger", state: "ok" },
+      { name: "Steps", state: "thin", note: "steps 3–4 are placeholders" },
+      { name: "Failure modes", state: "missing" },
+      { name: "Metrics", state: "thin", note: "no target values" },
+      { name: "Related playbooks", state: "ok" }
+    ]
+  }
+];
+
+// Topics the brain names repeatedly but has no node for.
+const CANDIDATES = [
+  {
+    name: "Spacing effect", mentions: 6, suggestedType: "concept",
+    why: "Cited as the mechanism behind spaced repetition but never defined on its own.",
+    refs: [
+      { title: "Spaced Repetition", type: "concept" },
+      { title: "Atomic Notes", type: "concept" }
+    ]
+  },
+  {
+    name: "Niklas Luhmann", mentions: 5, suggestedType: "entity",
+    why: "Named as the originator of the slip-box but has no entity node.",
+    refs: [
+      { title: "Zettelkasten", type: "system" },
+      { title: "How to Take Smart Notes", type: "reference" }
+    ]
+  },
+  {
+    name: "Mnemonic medium", mentions: 4, suggestedType: "concept",
+    why: "Referenced under Matuschak's notable work; broken link target.",
+    refs: [
+      { title: "Andy Matuschak", type: "entity" }
+    ]
+  },
+  {
+    name: "Progressive summarization", mentions: 3, suggestedType: "playbook",
+    why: "Mentioned as an alternative to daily review; no playbook exists.",
+    refs: [
+      { title: "Daily Note Review", type: "playbook" }
+    ]
+  },
+  {
+    name: "Forgetting curve", mentions: 3, suggestedType: "reference",
+    why: "Ebbinghaus's curve invoked in Spaced Repetition with no source node.",
+    refs: [
+      { title: "Spaced Repetition", type: "concept" }
+    ]
+  }
+];
+
+/* ---------- derived scoring ---------- */
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function counts(n){
+  let miss=0, thin=0, ok=0;
+  n.sections.forEach(s=>{ if(s.state==="missing")miss++; else if(s.state==="thin")thin++; else ok++; });
+  return {miss, thin, ok, total:n.sections.length};
+}
+// completeness: ok=1, thin=0.5, missing=0
+function completeness(n){
+  const c=counts(n);
+  return (c.ok + c.thin*0.5) / c.total;
+}
+NODES.forEach(n=>{ const c=counts(n); n._miss=c.miss; n._thin=c.thin; n._total=c.total; n._comp=completeness(n); });
+// centrality rank (1 = most central)
+[...NODES].sort((a,b)=>b.centrality-a.centrality).forEach((n,i)=>{ n._rank=i+1; });
+const MAXC = Math.max(...NODES.map(n=>n.centrality));
+
+/* ---------- state ---------- */
+let typeFilter = "all";
+let sortMode = "centrality";
+let openPath = null;
+
+/* ---------- filters ---------- */
+const FILTER_TYPES = ["all","concept","entity","playbook","reference","system"];
+function renderFilters(){
+  const el = document.getElementById("filters");
+  el.innerHTML = FILTER_TYPES.map(t=>{
+    const active = t===typeFilter ? " active" : "";
+    if(t==="all"){
+      return `<button class="chip-btn${active}" data-type="all">All types</button>`;
+    }
+    const m = TYPE_META[t];
+    const n = NODES.filter(x=>x.type===t).length;
+    return `<button class="chip-btn${active}" data-type="${t}"><span class="tdot" style="background:${m.color}"></span>${m.label}<span style="color:var(--muted-2)">${n}</span></button>`;
+  }).join("");
+}
+
+/* ---------- stats strip ---------- */
+function renderStats(){
+  const totalMiss = NODES.reduce((a,n)=>a+n._miss,0);
+  const totalThin = NODES.reduce((a,n)=>a+n._thin,0);
+  const avg = Math.round(NODES.reduce((a,n)=>a+n._comp,0)/NODES.length*100);
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><span class="v">${NODES.length}</span><span class="k">Incomplete nodes</span></div>
+    <div class="stat"><span class="v red">${totalMiss}</span><span class="k">Missing sections</span></div>
+    <div class="stat"><span class="v amber">${totalThin}</span><span class="k">Thin sections</span></div>
+    <div class="stat"><span class="v">${avg}%</span><span class="k">Avg completeness</span></div>
+    <div class="stat"><span class="v">${CANDIDATES.length}</span><span class="k">Node candidates</span></div>`;
+}
+
+/* ---------- table ---------- */
+function sortNodes(list){
+  const arr=[...list];
+  if(sortMode==="centrality") arr.sort((a,b)=>a._rank-b._rank);
+  else if(sortMode==="missing") arr.sort((a,b)=> b._miss-a._miss || a._rank-b._rank);
+  else if(sortMode==="thin") arr.sort((a,b)=> b._thin-a._thin || a._rank-b._rank);
+  else if(sortMode==="completeness") arr.sort((a,b)=> a._comp-b._comp || a._rank-b._rank);
+  return arr;
+}
+function gapChips(n){
+  const parts=[];
+  if(n._miss) parts.push(`<span class="gchip miss"><span class="cdot"></span>${n._miss} missing</span>`);
+  if(n._thin) parts.push(`<span class="gchip thin"><span class="cdot"></span>${n._thin} thin</span>`);
+  if(!parts.length) parts.push(`<span class="gchip none">complete</span>`);
+  return `<div class="gap-chips">${parts.join("")}</div>`;
+}
+function compBar(n){
+  const pct=Math.round(n._comp*100);
+  const col = pct<45 ? "var(--red)" : pct<70 ? "var(--amber)" : "var(--playbook)";
+  return `<div class="comp-cell">
+    <div class="comp-bar"><span style="width:${pct}%;background:${col}"></span></div>
+    <div class="comp-lbl">${pct}% · ${counts(n).ok}/${n._total} sections</div>
+  </div>`;
+}
+function detailBlock(n){
+  const miss=n.sections.filter(s=>s.state==="missing");
+  const thin=n.sections.filter(s=>s.state==="thin");
+  const col = TYPE_META[n.type].color;
+  function list(items,cls,mark){
+    if(!items.length) return `<div class="empty">None</div>`;
+    return `<div class="seclist">`+items.map(s=>`
+      <div class="secitem ${cls}">
+        <span class="mark">${mark}</span>
+        <span><span class="sn">${esc(s.name)}</span>${s.note?` <span class="sd">— ${esc(s.note)}</span>`:``}</span>
+      </div>`).join("")+`</div>`;
+  }
+  return `<div class="detail">
+    <div>
+      <div class="dh"><span class="pin" style="background:var(--red)"></span>Missing sections (${miss.length})</div>
+      ${list(miss,"miss","✕")}
+    </div>
+    <div>
+      <div class="dh"><span class="pin" style="background:var(--amber)"></span>Thin sections (${thin.length})</div>
+      ${list(thin,"thin","~")}
+    </div>
+  </div>`;
+}
+function renderTable(){
+  const list = sortNodes(NODES.filter(n=> typeFilter==="all" || n.type===typeFilter));
+  const tb = document.getElementById("tbody");
+  document.getElementById("rowCount").textContent = list.length;
+  if(!list.length){ tb.innerHTML = `<tr><td colspan="5" class="empty-state">No incomplete ${typeFilter} nodes — that type is fully enriched.</td></tr>`; return; }
+  tb.innerHTML = list.map(n=>{
+    const m = TYPE_META[n.type];
+    const open = n.path===openPath;
+    const barPct = Math.round(n.centrality/MAXC*100);
+    let html = `<tr class="node-row${open?' open':''}" data-path="${esc(n.path)}">
+      <td class="rank">
+        <div class="rnum">#${n._rank}</div>
+        <div class="rbar"><span style="width:${barPct}%"></span></div>
+      </td>
+      <td>
+        <div class="node-cell">
+          <span class="tdot" style="background:${m.color}"></span>
+          <span class="nt">
+            <div class="ntitle">${esc(n.title)}</div>
+            <div class="npath">${esc(n.path)}</div>
+          </span>
+        </div>
+      </td>
+      <td>${gapChips(n)}</td>
+      <td>${compBar(n)}</td>
+      <td style="text-align:center;"><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span></td>
+    </tr>`;
+    if(open){
+      html += `<tr class="detail-row"><td colspan="5">${detailBlock(n)}</td></tr>`;
+    }
+    return html;
+  }).join("");
+}
+
+/* ---------- candidates ---------- */
+function renderCandidates(){
+  document.getElementById("candCount").textContent = CANDIDATES.length;
+  const el = document.getElementById("candList");
+  const sorted=[...CANDIDATES].sort((a,b)=>b.mentions-a.mentions);
+  el.innerHTML = sorted.map(c=>{
+    const m = TYPE_META[c.suggestedType];
+    const refs = c.refs.map(r=>{
+      const rc = TYPE_META[r.type].color;
+      return `<span class="rf"><span class="tdot" style="background:${rc}"></span>${esc(r.title)}</span>`;
+    }).join("");
+    return `<div class="cand">
+      <div class="cand-top">
+        <span class="cand-name">${esc(c.name)}</span>
+        <span class="cand-count">${c.mentions}×</span>
+      </div>
+      <div class="cand-sub">${esc(c.why)}</div>
+      <div class="cand-refs">${refs}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:10px;">
+        <span class="cand-cta" data-create="${esc(c.name)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Create node
+        </span>
+        <span class="cand-suggested"><span class="tdot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${m.color};margin-right:5px;vertical-align:middle;"></span>${m.label.toLowerCase()}/</span>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ---------- header ---------- */
+function renderHeader(){
+  const miss = NODES.reduce((a,n)=>a+n._miss,0);
+  document.getElementById("headerRight").textContent = `${NODES.length} incomplete · ${miss} missing · ${CANDIDATES.length} candidates`;
+}
+
+/* ---------- toast ---------- */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.innerHTML=msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+/* ---------- events ---------- */
+document.getElementById("filters").addEventListener("click",e=>{
+  const b=e.target.closest("[data-type]"); if(!b) return;
+  typeFilter=b.getAttribute("data-type");
+  openPath=null;
+  renderFilters(); renderTable();
+});
+document.getElementById("sortSel").addEventListener("change",e=>{
+  sortMode=e.target.value; renderTable();
+});
+document.getElementById("tbody").addEventListener("click",e=>{
+  const row=e.target.closest(".node-row"); if(!row) return;
+  const p=row.getAttribute("data-path");
+  openPath = openPath===p ? null : p;
+  renderTable();
+});
+document.getElementById("candList").addEventListener("click",e=>{
+  const c=e.target.closest("[data-create]"); if(!c) return;
+  showToast(`Would draft a new node for <code>${esc(c.getAttribute("data-create"))}</code>`);
+});
+
+/* ---------- init ---------- */
+renderHeader();
+renderStats();
+renderFilters();
+renderTable();
+renderCandidates();
+</script>
+</body>
+</html>
