@@ -206,8 +206,12 @@ optional `#` sections, kept clearly separate from the evidence layer**:
 - **`# Expert opinion`** — attributed analysis/interpretation from a named, verified expert (e.g. a clinician's
   view on *why* a technique works; a horticulturist's rule of thumb).
 - **`# Lived experience`** — first-hand personal narrative: what the thing is actually like from someone who
-  has been through it. Sources include published memoirs / first-person essays, verbatim participant quotes
-  from qualitative studies, or on-the-record personal accounts.
+  has been through it. The narrator need **not** be a credentialed expert — *being the person who lived it is
+  the authority.* **Qualitative sources on a human-experience topic are prime material:** published memoirs /
+  first-person essays, verbatim participant quotes from qualitative studies, on-the-record personal accounts,
+  and first-person **video / podcast** narratives (e.g. someone describing their day-to-day life with OCD).
+  Attribute it, keep it as *illustration* (one person's experience, never a generalisable claim), and respect
+  privacy — don't over-identify a private individual; anonymise where the source does.
 
 **When to include (topic-gated, optional).** Expect them on human-experience topics — mental health,
 relationships, coping, life challenges, applied practice. **Omit both** on pure mechanism / method / history
@@ -241,6 +245,13 @@ verify genuine, *topical* authority. Two conditions, **both** required:
 - **Genuine credentials in *this* topic** — a relevant qualification, an academic / clinical / professional
   position, or a recognised body of work in the field. A Knowledge Panel **alone is not enough**: a celebrity
   has one without topical expertise; a neuroscientist is an authority on neuroscience, not on nutrition.
+
+**Two DIFFERENT gates for the two sections.** The expertise gate above governs `# Expert opinion` — you must
+*be* an expert to give expert opinion. `# Lived experience` uses a different test: **authenticity, not
+credentials.** A genuine first-hand account from someone who actually experienced the thing qualifies (the
+"authority" is having lived it), so a non-expert's honest first-person narrative of a condition is a valid
+lived-experience source — but it is never a source of *expert* opinion, and never presented as generalisable
+fact. In short: expertise for opinion, authenticity for experience.
 
 Podcasts and YouTube interviews **may** be quoted as **attributed expert opinion** once the speaker passes
 this gate — but only as opinion, never as fact (rule 3), and **note any documented reliability caveat** for
