@@ -64,6 +64,31 @@ Proposed from "companion-planting-trials-2024.pdf":
   flag genuine merge candidates for the human.
 - Expect **both** from one upload: enrich several existing nodes **and** spawn one or two new ones.
 
+#### Interview & podcast sources — record the SPEAKER and fact-check their expertise
+
+Some sources are **interviews / podcasts / talks / videos** (e.g. a science podcast where a host interviews a
+guest, or a first-person YouTube video). These belong to the **attributed opinion / lived-experience tier**,
+not the primary-citation tier (see the "Expert opinion & lived experience" section of **okf-concept-node**).
+Two extra assessment steps apply before you propose anything from them:
+
+- **Attribute to the actual SPEAKER of the claim, not the show.** An interview has a **host** and one or more
+  **guests**. The authority on the topic is usually whoever *says* the thing — often the interviewed guest,
+  not the host. For each claim you want to lift, **record the name of the specific person who said it** (guest
+  or host) plus the episode/source. Never attribute a guest's statement to the host or to "the podcast".
+- **Fact-check that speaker's expertise ON THIS TOPIC** before proposing their words as attributed *expert
+  opinion*. Apply the expertise gate (**okf-concept-node**): established public standing (a Google **Knowledge
+  Panel** / Wikipedia bio / named institutional post) **and** genuine credentials in *this* topic. A host may be
+  an expert in their own field but a layperson on the guest's — gate **each speaker against the specific
+  claim's topic**, and note any documented reliability caveat (e.g. a host who tends to overstate).
+- **A genuine first-hand account → lived experience, not expert opinion.** If the person is describing their
+  *own* experience of a condition rather than giving expert analysis, treat it as a `# Lived experience` source
+  (authenticity, not credentials) and attribute it to that named person (respect privacy for private
+  individuals).
+- **Name the interviewee in the provenance.** The one `reference` node for the source (step 3) records the
+  show, episode, host **and** the interviewed guest(s); empirical claims still trace to the primary literature,
+  never to the episode. A recurring gated expert also gets an `entity-<name>` node carrying the expertise check
+  (see **okf-node-types** / okf-concept-node).
+
 ### 2. Human approves / rejects (the only manual step)
 The human **approves, rejects, or edits each item**. **Nothing is written until approved** — the agent
 does the work, the human decides *what lands*. Do not batch-approve on the human's behalf.
@@ -93,6 +118,10 @@ For every approved item:
 - **Provenance ≠ citation.** Record the ingested source as provenance; cite the primary literature.
 - **No fabrication.** No invented facts, citations, or DOIs; if a section can't be sourced, leave it and
   flag it rather than filling it from outside knowledge.
+- **Interview/podcast sources: attribute to the speaker, gate the speaker.** Record the NAME of whoever
+  actually said each lifted claim (interviewed guest vs host), fact-check *that* person's expertise on the
+  topic, and note reliability caveats; a genuine first-hand account is lived experience (authenticity), not
+  expert opinion (credentials). See the interview subsection in step 1.
 - **Strip source artifacts — the node must stand alone.** When lifting from the source, never carry over
   its cross-references: no "Table 1", "Fig. 2", "see chapter 3", "the diagram above", "p. 42". The reader
   won't have the source — **embed the content instead** (transcribe the table, describe the figure). See
