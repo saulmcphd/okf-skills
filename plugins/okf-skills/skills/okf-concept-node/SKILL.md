@@ -103,9 +103,15 @@ timestamp: 2026-07-11           # ISO-8601 date or datetime
 
 # <Topic sections with tables/lists embedding the FULL detail>
 
+# Expert opinion          # OPTIONAL (human-experience topics only) — attributed analysis from a named, VERIFIED expert; see E-E-A-T below
+# Lived experience        # OPTIONAL (human-experience topics only) — attributed first-hand personal narrative
+
 # Related
 * [Other concept title](/concepts/concept-x.md) - why it's related
 * [A playbook](/playbooks/playbook-y.md) - where this is applied
+
+# Expert & experiential sources   # OPTIONAL — provenance for the two attributed sections above; kept SEPARATE from # Citations/# References
+- Expert, A. (Year). [Talk / interview / book title]. Venue. https://…
 
 # Citations
 [1] Author. Title. Year. https://doi.org/…
@@ -187,9 +193,72 @@ per bundle and be consistent. For an **academic / research brain**, apply this d
 (A non-academic brain — e.g. gardening — can keep this light: a `# Related` link or a single source URL
 is often enough. The discipline above scales *up* for scholarly work; it isn't mandatory for every brain.)
 
+## Expert opinion & lived experience (the first two E's of E-E-A-T)
+
+Peer-reviewed citations give a node **Authoritativeness and Trustworthiness**. Two further quality signals —
+**Experience** (first-hand, lived) and **Expertise** (a named authority's analysis) — answer a *different*
+question than the evidence base does: not "is this claim true?" but "how do knowledgeable people interpret it,
+and how do people who have lived it experience it?" On applied, human-facing topics (mental health,
+relationships, coping, wellbeing; or, in a gardening brain, hands-on craft) these add the "huh, never knew
+that" insight and the relatable first-person texture a purely academic node lacks. Capture them in **two
+optional `#` sections, kept clearly separate from the evidence layer**:
+
+- **`# Expert opinion`** — attributed analysis/interpretation from a named, verified expert (e.g. a clinician's
+  view on *why* a technique works; a horticulturist's rule of thumb).
+- **`# Lived experience`** — first-hand personal narrative: what the thing is actually like from someone who
+  has been through it. Sources include published memoirs / first-person essays, verbatim participant quotes
+  from qualitative studies, or on-the-record personal accounts.
+
+**When to include (topic-gated, optional).** Expect them on human-experience topics — mental health,
+relationships, coping, life challenges, applied practice. **Omit both** on pure mechanism / method / history
+nodes (e.g. "action potential", "counterbalancing", "the founding of Wundt's lab") where lived experience is
+irrelevant and there is no distinct expert opinion beyond the literature. **Never pad a node with an empty
+section** — leave the sections out when they don't apply.
+
+**Three rules that keep the attributed layer honest:**
+
+1. **Label the epistemic status.** The `# Expert opinion` / `# Lived experience` heading tells the reader
+   "this is viewpoint / narrative, *not* peer-reviewed fact." Never blur the two.
+2. **Attribute, never launder.** Always name the person *and* the exact source in the prose — "On the
+   *Huberman Lab* podcast, Andrew Huberman argues…", "In *Feeling Good*, David Burns describes…", "Monty Don
+   recommends…". Opinion is always on the record as someone's view, never voiced as the node's own.
+3. **Trace empirical claims to a primary anyway.** If an expert states a *fact* ("X raises dopamine ~250%"),
+   that fact still needs the underlying study cited in `# References` — the interview is where you *found* it;
+   the study is what you *cite*. Only genuine opinion / interpretation / lived narrative stays in the
+   attributed sections.
+
+**Record the sources SEPARATELY — not in `# References`.** Keep `# References` for primary/original works only
+(the citation rules above). Put expert-opinion and lived-experience provenance in a distinct
+**`# Expert & experiential sources`** list (or attribute fully inline). This preserves the primary-only
+guarantee of `# References` while still crediting the source, e.g.
+`Huberman, A. (Year). [Episode title]. Huberman Lab podcast. https://…`.
+
+**The expertise gate — is this person actually an expert?** Before treating anyone as a citable expert,
+verify genuine, *topical* authority. Two conditions, **both** required:
+
+- **Established public standing** — a Google **Knowledge Panel** is a good first filter (it is Google's own
+  entity-authority signal); an equivalent (a Wikipedia biography, a named institutional post) also works.
+- **Genuine credentials in *this* topic** — a relevant qualification, an academic / clinical / professional
+  position, or a recognised body of work in the field. A Knowledge Panel **alone is not enough**: a celebrity
+  has one without topical expertise; a neuroscientist is an authority on neuroscience, not on nutrition.
+
+Podcasts and YouTube interviews **may** be quoted as **attributed expert opinion** once the speaker passes
+this gate — but only as opinion, never as fact (rule 3), and **note any documented reliability caveat** for
+that speaker right where you quote them (e.g. a host with a flagged tendency to overstate), preferring to
+trace their factual claims to the primary literature.
+
+**Give a recurring expert their own entity node.** When an expert is quoted across several nodes, create an
+`entity-<name>` node recording who they are, their expertise domain, *why* they qualify (the Knowledge-Panel /
+credential check), and any reliability caveat — then link every quoting node to it. The "is this person an
+expert?" judgement then lives in one authoritative place instead of being re-litigated per node.
+
 ## Quality bar
 
 - `type` present + queryable fields filled; AI nodes carry `provenance`.
 - Self-contained and maximally detailed — no "see the source" deferrals.
 - `# Related` present where relevant; links are bundle-relative markdown (no wikilinks).
+- On human-experience topics, `# Expert opinion` / `# Lived experience` present, each **attributed** to a
+  gated expert or a named first-hand account, with provenance in `# Expert & experiential sources` (never in
+  `# References`); opinion is never stated as fact, and any factual claim traces to a primary. Omitted (not
+  empty) on pure method / mechanism / history nodes.
 - Would survive `lint`: not a **thin** stub, no orphan links.
