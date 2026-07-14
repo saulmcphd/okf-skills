@@ -29,7 +29,7 @@ implementations (see [Credits](#credits)).
 | **Cite** | `okf-bibliography` | *Academic brains:* manage the references registry (`references.json`) — verified **primary** citations, no fabrication. |
 | **Use** | `okf-dashboard` | Build a graph explorer (see the brain) + an ask-the-brain grounded Q&A (query it). |
 | **Grow** | `okf-ingest-source` | Add a new PDF/URL safely: assess → **human approves** → enrich (new node vs. enrich existing). |
-| **Maintain** | `okf-gap-scan` | Find what's incomplete (missing/thin sections + coverage gaps) → a ranked enrichment backlog. |
+| **Maintain** | `okf-gap-scan` | Find what's incomplete (missing/thin sections, coverage gaps, source-comparison gaps, or unanswered searcher questions) → a ranked enrichment backlog. |
 
 The skills cross-reference each other, so an agent chains them naturally (scaffold → author → use → grow
 → maintain).
