@@ -2,18 +2,15 @@
 name: okf-gap-scan
 description: >-
   Find where an OKF (Open Knowledge Format) "second brain" is incomplete — a completeness audit, not a
-  broken-link lint. Four kinds of gap: STRUCTURAL (a node missing or thin on its expected `#` sections,
-  scored against a per-type section schema), COVERAGE (an important topic/person the brain names but
-  has no node for), SOURCE-COMPARISON (auditing a node against the actual text of a source it draws
-  on or should — topic/keyword/depth-mechanistic/recency gaps, plus verbatim quote/stat verification that
-  catches misquotes a schema check can't), and SEARCHER-DEMAND (a 100-question audit from the reader's/
-  searcher's perspective — does the node answer what a person searching the topic would ask? — surfacing
-  answer-box/featured-snippet and topical-coverage opportunities, each reported with ready-to-drop-in text
-  and placement). Produces a ranked enrichment backlog. Use this when the user asks what's missing or
-  incomplete in their brain, which nodes are thin or need enriching, where the coverage gaps are, whether a
-  node captures everything a source says, whether a node answers a searcher's likely questions, wants a
-  topical-coverage / answer-box / SEO gap audit, or wants to build an enrichment to-do list. Domain-agnostic.
-  Feeds okf-ingest-source (which section a new source should fill) and okf-concept-node (the enrichment work).
+  broken-link lint. Four kinds of gap: STRUCTURAL (missing/thin expected `#` sections vs a per-type
+  schema), COVERAGE (an important topic/person the brain names but has no node), SOURCE-COMPARISON (a
+  node vs a source's real text — topic/keyword/depth/recency gaps + verbatim quote/stat checks), and
+  SEARCHER-DEMAND (a 100-question audit from the searcher's perspective — does the node answer what a
+  searcher would ask? — surfacing answer-box and topical-coverage opportunities with ready-to-drop-in
+  text). Produces a ranked enrichment backlog. Use when the user asks what's missing or incomplete,
+  which nodes are thin or need enriching, where coverage gaps are, whether a node answers a searcher's
+  likely questions, or wants a topical-coverage / answer-box / SEO gap audit. Domain-agnostic. Feeds
+  okf-ingest-source and okf-concept-node.
 ---
 
 # Scan an OKF brain for gaps
