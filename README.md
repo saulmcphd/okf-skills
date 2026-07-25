@@ -16,7 +16,9 @@ implementations (see [Credits](#credits)).
 > **What is OKF?** A bundle is just a directory of markdown files. Each file is one node with YAML
 > frontmatter and a body that links to other nodes with ordinary markdown links. An agent reads
 > `index.md` first, then opens only the few nodes relevant to its task — curated navigation instead of
-> vector search. Spec: `GoogleCloudPlatform/knowledge-catalog/okf/SPEC.md`.
+> vector search. Spec: `GoogleCloudPlatform/knowledge-catalog/okf/SPEC.md` (these skills target **v0.2**,
+> which added optional trust-signal fields — `generated`, `verified`, `sources`, `stale_after`/`status` —
+> and is backward compatible with v0.1 bundles).
 
 ## The skills (a full lifecycle)
 

@@ -155,7 +155,9 @@ def lint(nodes: dict) -> int:
     valid = set(nodes)
     for n in nodes.values():
         fm = n["fm"]
-        missing = [k for k in ("type", "title", "description", "tags", "timestamp") if k not in fm]
+        missing = [k for k in ("type", "title", "description", "tags") if k not in fm]
+        if "timestamp" not in fm and "generated" not in fm:   # OKF v0.2 renamed timestamp -> generated
+            missing.append("timestamp/generated")
         if missing:
             print(f"MISSING FIELDS {n['path']}: {missing}")
             problems += 1

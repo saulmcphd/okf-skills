@@ -32,7 +32,8 @@ TYPE_BY_FOLDER = {"concepts": "concept", "entities": "entity", "references": "re
                   "systems": "system", "playbooks": "playbook"}
 
 # EDIT THIS for your bundle. spec = (display_name, [heading aliases], kind).
-# kind: "prose" (thin if < THIN_SECTION_CHARS) | "related" (thin if < MIN_RELATED_LINKS) | "cite".
+# kind: "prose" (thin if < THIN_SECTION_CHARS) | "related" (thin if < MIN_RELATED_LINKS) | "cite"
+# (satisfied by a matching body section OR a frontmatter `sources:` key — OKF v0.2).
 # `system` is omitted on purpose — add it if your systems follow a fixed structure.
 SCHEMA = {
     "concept": [
@@ -131,10 +132,12 @@ def schema_for(node: dict):
     return specs
 
 
-def score_section(spec, secmap, thin_chars):
+def score_section(spec, secmap, thin_chars, fm=None):
     display, aliases, kind = spec
     content = find_section(aliases, secmap)
     if content is None:
+        if kind == "cite" and fm and "sources" in fm:   # OKF v0.2: sources: frontmatter satisfies citing
+            return {"name": display, "state": "ok"}
         return {"name": display, "state": "missing"}
     if kind == "related":
         n = len(links_with_text(content))
@@ -224,7 +227,7 @@ def main() -> None:
             continue
         scanned += 1
         secmap = split_sections(n["body"])
-        sections = [score_section(s, secmap, thin_chars) for s in specs]
+        sections = [score_section(s, secmap, thin_chars, n["fm"]) for s in specs]
         if any(s["state"] != "ok" for s in sections):
             incomplete.append({"path": p, "title": n["title"], "type": n["type"],
                                "centrality": round(indeg[p] / maxdeg, 3), "in_degree": indeg[p],
