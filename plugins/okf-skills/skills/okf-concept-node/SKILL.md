@@ -38,7 +38,7 @@ title: "Human-readable title"
 description: "One sentence an agent uses (via index.md) to decide if THIS is the file it needs."
 resource: "https://…   # canonical source URL — a provenance pointer, NOT a content crutch"
 tags: [topic, subtopic, source-tag]
-timestamp: 2026-07-11           # ISO-8601 date or datetime
+generated: { by: session-authored, at: 2026-07-11T00:00:00Z }   # OKF v0.2: replaces timestamp
 ---
 ```
 
@@ -49,6 +49,19 @@ timestamp: 2026-07-11           # ISO-8601 date or datetime
   specific label (e.g. `BigQuery Table`, `Evaluation Framework`). If you use descriptive types, keep them
   consistent so the index and graph can still group by them — and always place the node in the right
   canonical folder.
+- **Trust fields (OKF v0.2, optional but recommended).** `generated` and `verified` are kept deliberately
+  separate — *who wrote it* is not *who confirmed it*:
+
+  ```yaml
+  generated: { by: reference_agent/claude-opus-4-8, at: 2026-07-11T00:00:00Z }
+  verified:
+    - { by: human:you@example.com, at: 2026-07-12T09:00:00Z }
+  ```
+
+  A consumer derives a **trust tier** from `verified`: no `verified` entry is unverified; confirmation by
+  a machine actor only is machine-confirmed; a `human:<id>` entry makes it human-reviewed. `verified` is a
+  **list** — a node can carry more than one independent confirmation (e.g. a human sign-off *and* an
+  automated check). Tiers are advisory signals for a consumer to filter on, not access control.
 - **For any AI-generated node, add a `provenance` block:**
 
   ```yaml
@@ -95,7 +108,7 @@ timestamp: 2026-07-11           # ISO-8601 date or datetime
   self-contained *and* renders properly in the dashboard's node reader (lists, tables, code — see
   okf-dashboard).
 
-### Conventional sections (`# Definition` first, `# Citations` last)
+### Conventional sections (`# Definition` first, `# Related` last)
 
 ```
 # Definition
@@ -110,12 +123,13 @@ timestamp: 2026-07-11           # ISO-8601 date or datetime
 * [Other concept title](/concepts/concept-x.md) - why it's related
 * [A playbook](/playbooks/playbook-y.md) - where this is applied
 
-# Expert & experiential sources   # OPTIONAL — provenance for the two attributed sections above; kept SEPARATE from # Citations/# References
+# Expert & experiential sources   # OPTIONAL — provenance for the two attributed sections above; kept SEPARATE from sources/# References
 - Expert, A. (Year). [Talk / interview / book title]. Venue. https://…
-
-# Citations
-[1] Author. Title. Year. https://doi.org/…
 ```
+
+Numbered citations move to frontmatter as **OKF v0.2's `sources:`** list (see below) instead of a body
+`# Citations` section (retired in v0.2). A scholarly brain's alphabetised `# References` body section is
+unaffected — it's a distinct, still-valid convention (see next section).
 
 ## Interlinking
 
@@ -134,7 +148,12 @@ title: "Companion planting"
 description: "Placing mutually beneficial plants together to deter pests, attract pollinators, and lift yield — principles, classic pairings, and cautions."
 resource: "https://www.rhs.org.uk/advice/companion-planting"
 tags: [companion-planting, pest-control, vegetable-garden]
-timestamp: 2026-07-11
+generated: { by: session-authored, at: 2026-07-11T00:00:00Z }
+sources:
+  - id: rhs-companion-planting
+    resource: "https://www.rhs.org.uk/advice/companion-planting"
+    title: "Companion planting"
+    author: "Royal Horticultural Society"
 provenance:
   ai_model: claude-opus-4-8
   ai_provider: anthropic
@@ -164,16 +183,16 @@ nutrients…
 # Related
 * [Crop rotation](/concepts/concept-crop-rotation.md) - the complementary temporal practice.
 * [Spring bed preparation](/playbooks/playbook-spring-bed-prep.md) - where pairings are laid out on the ground.
-
-# Citations
-[1] Royal Horticultural Society. Companion planting. https://www.rhs.org.uk/advice/companion-planting
 ```
 
 ## Citing sources (especially for an academic brain)
 
-Provenance in the body lives in a citations section — `# Citations` (numbered, the OKF-spec convention)
-or, for a scholarly brain, `# References` (an alphabetised APA/Vancouver-style list). Pick **one** style
-per bundle and be consistent. For an **academic / research brain**, apply this discipline:
+**OKF v0.2** moved numbered material provenance to the frontmatter `sources:` list (superseding the old
+body-level `# Citations` section — a straight rename, `# Citations` → `sources:`). For a **scholarly
+brain**, keep a `# References` body section — an alphabetised APA/Vancouver-style list — alongside
+`sources:`; the two serve different jobs: `sources:` is *what this node draws on* (agent-facing
+provenance), `# References` is the *reader-facing* scholarly citation list. For an **academic / research
+brain**, apply this discipline:
 
 - **Cite PRIMARY sources, not the secondary text you read them in.** If a textbook summarises Milgram's
   1963 study, cite Milgram (1963) — not the textbook. Re-attribute each claim to the original work.

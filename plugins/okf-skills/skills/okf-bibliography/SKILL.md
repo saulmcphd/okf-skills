@@ -43,7 +43,7 @@ Key each entry by a stable **citation key** (`author-year`, disambiguated `-a/-b
     "pages": "371–378",
     "doi": "10.1037/h0040525",
     "apa": "Milgram, S. (1963). Behavioral study of obedience. Journal of Abnormal and Social Psychology, 67(4), 371–378. https://doi.org/10.1037/h0040525",
-    "verified": true,
+    "doi_verified": true,
     "found_in": ["ref-gross", "ref-simplypsychology"]
   }
 }
@@ -51,7 +51,11 @@ Key each entry by a stable **citation key** (`author-year`, disambiguated `-a/-b
 
 - `apa` (or your chosen style) is the ready-to-paste `# References` line — nodes copy it verbatim so
   formatting is consistent everywhere.
-- `verified` = the citation was resolved to a real work (DOI / Crossref match), not just typed.
+- `doi_verified` = the citation was resolved to a real work (DOI / Crossref match), not just typed.
+  Named `doi_verified` rather than bare `verified` to avoid colliding with OKF v0.2's node-level
+  `verified: [ { by, at } ]` trust field (see **okf-concept-node**) — that field means something
+  different: a list of independent confirmations of a node's content (human sign-off, an automated
+  process, or both), not a DOI-resolution check.
 - `found_in` = which source(s) the reference was harvested from — provenance, kept separate from the
   citation itself.
 
@@ -63,8 +67,8 @@ Key each entry by a stable **citation key** (`author-year`, disambiguated `-a/-b
 2. **Merge, don't duplicate.** Dedupe by DOI first, then fuzzy author-year-title. Merge `found_in` lists
    so one work has one registry entry regardless of how many sources cite it.
 3. **Verify against Crossref / DOI.** For each entry, confirm it resolves to a real work — query Crossref
-   by `title` + `author` + `year`, accept an exact match, and record the DOI. Mark `verified: true`.
-   **Never invent or guess a DOI**; an unresolved entry stays `verified: false` and is flagged, not
+   by `title` + `author` + `year`, accept an exact match, and record the DOI. Mark `doi_verified: true`.
+   **Never invent or guess a DOI**; an unresolved entry stays `doi_verified: false` and is flagged, not
    fabricated. Re-validate periodically (DOIs rot; publishers re-issue).
 
 ## Primary-citation matching (the whole point)
@@ -81,7 +85,7 @@ secondary text, and do not invent a source.
 
 ## How a node uses the registry
 
-A concept/entity node's `# References` (or `# Citations`) list is **generated from the registry**: for
+A concept/entity node's `# References` (or frontmatter `sources:` — OKF v0.2) list is **generated from the registry**: for
 each work the node cites, copy that entry's formatted line. Result: consistent formatting, no duplicate
 references, and every citation already verified. Frontmatter provenance (`source-<slug>` / `primary_source`)
 still records *which source the node was written from* — provenance stays separate from citations.
@@ -89,7 +93,7 @@ still records *which source the node was written from* — provenance stays sepa
 ## Guardrails
 - **Primary, not secondary** — cite the original work, never the textbook that summarised it.
 - **Verified, not fabricated** — every citation resolves to a real work; never guess a DOI; flag
-  unresolved refs (`verified: false` / "reference pending verification") rather than inventing them.
+  unresolved refs (`doi_verified: false` / "reference pending verification") rather than inventing them.
 - **One record per work** — the registry is the single source of truth for bibliographic detail; nodes
   copy from it, they don't re-type it.
 - **Provenance ≠ citation** — `found_in` / `source-<slug>` tracks where a reference came from, separate

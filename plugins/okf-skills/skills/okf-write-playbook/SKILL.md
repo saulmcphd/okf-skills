@@ -50,7 +50,7 @@ title: "Human-readable stage title"
 description: "One sentence an agent uses (via index.md) to decide if THIS procedure is the one it needs."
 resource: "https://…   # canonical source for the procedure, if any"
 tags: [stage-tag, domain-tag]
-timestamp: 2026-07-11
+generated: { by: session-authored, at: 2026-07-11T00:00:00Z }   # OKF v0.2: replaces timestamp
 stage: bed-prep                # short stage key
 stage_number: "1"             # optional ordering within a pipeline
 status: built                  # draft | built | deprecated
@@ -100,7 +100,7 @@ type: playbook
 title: "Spring bed preparation"
 description: "Get a vegetable bed ready for spring planting — clear, amend, and lay out beds per companion-planting and rotation rules."
 tags: [spring, bed-prep, vegetable-garden]
-timestamp: 2026-07-11
+generated: { by: session-authored, at: 2026-07-11T00:00:00Z }
 stage: bed-prep
 status: built
 provider_agnostic: true

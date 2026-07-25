@@ -30,7 +30,7 @@ A reasonable default schema (adjust per bundle/domain):
 
 | Type | Expected `#` sections |
 | :-- | :-- |
-| `concept` | `# Definition`, topic sections, `# Evaluation` (balanced criticisms), `# Related`, `# References`/`# Citations` |
+| `concept` | `# Definition`, topic sections, `# Evaluation` (balanced criticisms), `# Related`, `# References` (or frontmatter `sources:` — OKF v0.2) |
 | `entity` | `# Definition`, `# Key contributions`, `# Significance`, `# Related`, `# References` |
 | `reference` | `# What it is`, `# What this brain draws from it`, `# Where it lives`, `# Related` |
 | `playbook` | `# Goal`, `# Inputs → Outputs`, `# Steps`, `# How to judge`, `# Guardrails`, `# Hand-off` |

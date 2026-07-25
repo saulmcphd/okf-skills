@@ -37,7 +37,7 @@ title: "Royal Horticultural Society (RHS)"
 description: "UK gardening charity; authority on horticultural practice, plant trials, and the Award of Garden Merit."
 entity_kind: organisation
 tags: [organisation, horticulture, uk]
-timestamp: 2026-07-11
+generated: { by: session-authored, at: 2026-07-11T00:00:00Z }   # OKF v0.2: replaces timestamp
 ---
 # Definition
 The Royal Horticultural Society (founded 1804) is the UK's leading gardening charity…
@@ -79,7 +79,7 @@ isbn: "9780241534878"
 sha256: "…"        # if a local copy was ingested
 source_dir: "/sources/rhs-veg/"
 tags: [reference, vegetables, how-to]
-timestamp: 2026-07-11
+generated: { by: session-authored, at: 2026-07-11T00:00:00Z }
 ---
 # What it is
 A practical single-volume vegetable-growing manual covering sowing, spacing, and harvest by crop.
@@ -109,7 +109,7 @@ type: system
 title: "Garden-brain ingestion pipeline"
 description: "Turns source PDFs/URLs into concept and reference nodes; regenerates the index and graph."
 tags: [system, pipeline, ingestion]
-timestamp: 2026-07-11
+generated: { by: session-authored, at: 2026-07-11T00:00:00Z }
 ---
 # What it is
 The scripted pipeline that extracts sources and writes OKF nodes for this bundle.
