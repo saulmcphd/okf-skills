@@ -53,7 +53,7 @@ tags: [stage-tag, domain-tag]
 generated: { by: session-authored, at: 2026-07-11T00:00:00Z }   # OKF v0.2: replaces timestamp
 stage: bed-prep                # short stage key
 stage_number: "1"             # optional ordering within a pipeline
-status: built                  # draft | built | deprecated
+status: built                  # draft | trial | built | deprecated
 provider_agnostic: true        # true if it doesn't hard-depend on one vendor/tool
 uses_skills: []                # authoring skills this stage runs
 scripts: []                    # scripts/tools that perform it
@@ -91,6 +91,29 @@ number") sits well between `# Steps` and `# How to judge`.
 A playbook is judged on whether **a competent person could execute the stage from it alone**, opening
 the linked concepts only when they need the underlying rule. If they'd have to guess, the step is too
 thin or a concept link is missing.
+
+## Revising a playbook — knowledge accumulates, procedure is gated
+
+A **concept** node only ever grows: even a correction stays as two dated, sourced claims side by side
+(see okf-ingest-source's contradiction handling) — nothing is rolled back. A **playbook** is different:
+it's an instruction a person or agent will *follow*, so a bad revision doesn't just sit there unread — it
+actively misleads the next run. Gate playbook edits accordingly:
+
+1. **Speculative revision → `status: trial`.** When you change a `# Steps` or `# How to judge` rule on a
+   hypothesis (a new source, a gap-scan finding, a one-off failure) rather than a confirmed pattern, ship
+   it as `status: trial`, not `built`, and name the confirm/overturn criterion under the playbook's own
+   `# Guardrails` section (its do-not-regress line).
+2. **Confirm before promoting.** Once the trial revision has actually been exercised and held up,
+   promote to `status: built` and append an **Update** entry to `log.md` naming *what* changed and *why*
+   — the concept, gap-scan finding, or ingested source that justified it (see okf-gap-scan /
+   okf-ingest-source). Don't let a trial linger unchecked — revisit it the next time this stage runs.
+3. **If it doesn't hold up, revert — don't patch over it.** Restore the prior `# Steps` / `# How to
+   judge`, set the restored version back to `status: built`, and append a **Reverted** entry to `log.md`
+   (what was tried, what broke, what it reverted to). This is what stops the *next* proposal from trying
+   the same fix again from scratch (see okf-create-bundle's `log.md` conventions).
+
+Through all of this the **concept nodes this playbook links stay untouched** — they're the accumulated
+knowledge layer and are never reverted. Only the **procedure** is gated on whether it actually worked.
 
 ## Worked micro-skeleton (domain-neutral — a gardening playbook)
 

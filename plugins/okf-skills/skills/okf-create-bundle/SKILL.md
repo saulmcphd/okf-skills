@@ -146,10 +146,21 @@ no-frontmatter rule: the **bundle-root** `index.md` may carry a single key, `okf
 declare the spec version it targets — the only place frontmatter is permitted in an index file.
 
 **`log.md` — change history, newest first.** Date headings MUST be ISO-8601 `YYYY-MM-DD`. Leading bold
-word (**Creation** / **Update** / **Deprecation**) is a convention:
+word is a convention — **Creation** / **Update** / **Deprecation** for what landed, plus two entries
+that exist specifically so the brain doesn't repeat its own mistakes: **Rejected** (a proposed change a
+human turned down — see okf-ingest-source's approve/reject loop) and **Reverted** (a playbook revision
+that didn't hold up in practice and was rolled back — see okf-write-playbook). Both are durable audit
+trail, not conversational noise: before re-proposing a change or re-trying a procedure tweak, check
+`log.md` for a prior **Rejected**/**Reverted** entry on the same node/topic first.
 
 ```
 # Directory Update Log
+
+## 2026-07-14
+* **Rejected**: proposed enriching concept-companion-planting.md with a "raised beds" subsection from
+  ref-rhs-veg-guide-2026.md — human judged it off-topic for this concept.
+* **Reverted**: playbook-full-text-screening.md's stricter exclusion-rate threshold (added 2026-07-12)
+  produced false rejections in practice; reverted to the prior threshold.
 
 ## 2026-07-11
 * **Creation**: seeded the bundle with concepts for companion planting and crop rotation.

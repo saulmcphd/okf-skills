@@ -39,6 +39,11 @@ navigation) and produce a **per-item proposal**:
   material — so no upload is ever triaged in isolation from what you already know you're missing.
 - **Contradictions** — where the source disagrees with an existing claim, flag it (both statements,
   each dated and sourced) rather than silently overwriting.
+- **Check the rejection log first.** Before finalising the proposal, scan `log.md` for prior
+  **Rejected** entries touching the same node/section/topic (see okf-create-bundle's `log.md`
+  conventions). If one exists, don't silently re-propose it. Either drop it, or — if this source gives
+  materially new grounds — propose it again and say so explicitly: *"previously rejected on \<date\> for
+  \<reason\>; re-proposing because this source adds \<what's new\>."*
 
 Present it as a checklist the human can act on item-by-item, e.g.:
 
@@ -93,6 +98,11 @@ Two extra assessment steps apply before you propose anything from them:
 The human **approves, rejects, or edits each item**. **Nothing is written until approved** — the agent
 does the work, the human decides *what lands*. Do not batch-approve on the human's behalf.
 
+**Record every rejection.** For each item the human rejects, append a **Rejected** entry to `log.md`
+(what was proposed, which node/section, the source, and the human's reason if given). Never let a
+rejection just vanish at the end of the conversation — this is exactly what step 1's "check the
+rejection log" reads back on the *next* upload, so the same idea doesn't get re-proposed from scratch.
+
 ### 3. Enrich (on approval only) — to the same standard
 For every approved item:
 - **Write/expand** the node per **okf-concept-node** (concepts) or **okf-node-types** (entity / reference
@@ -112,6 +122,8 @@ For every approved item:
 
 ## Guardrails
 - **Human-gated.** Never write an unapproved change.
+- **Rejections are durable, not just conversational.** Log them to `log.md` (step 2) and check that log
+  before proposing (step 1) — a brain that re-asks the same rejected question every wave erodes trust.
 - **Integrate, don't duplicate.** Enrich an existing node before creating a near-duplicate; dedupe by
   *topic* (slugs differ), not by filename.
 - **Surface contradictions**, don't bury them.
